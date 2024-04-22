@@ -9,13 +9,13 @@ import Foundation
 
 // Movie Model
 struct Movie: Codable {
-    let dates: Dates
+    let dates: Dates?
     let page: Int
-    let movie: [MovieModel]
+    let results: [MovieModel]
     let totalPages, totalResults: Int
     
     enum CodingKeys: String, CodingKey {
-        case dates, page, movie
+        case dates, page, results
         case totalPages = "total_pages"
         case totalResults = "total_results"
     }
@@ -52,6 +52,12 @@ enum OriginalLanguage: String, Codable {
     case en = "en"
     case fr = "fr"
     case it = "it"
+    case unknown
+    
+    init(from decoder: Decoder) throws {
+        let label = try decoder.singleValueContainer().decode(String.self)
+        self = OriginalLanguage(rawValue: label) ?? .unknown
+    }
 }
 
 
