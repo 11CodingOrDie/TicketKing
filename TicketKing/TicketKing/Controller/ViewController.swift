@@ -52,8 +52,9 @@ class ViewController: UIViewController {
     
     private func fetchMovieData() {
         Task {
+            await GenreManager.shared.loadGenresAsync()
             do {
-                let movieData = try await MovieService.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR")
+                let movieData = try await MovieManager.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR")
                 DispatchQueue.main.async {
                     self.movies = movieData.results
                     self.addMoviesToScrollView()
@@ -85,10 +86,12 @@ class ViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = movie.title
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-//        
-//        let genreLabel = UILabel()
-//        genreLabel.text = movie.genreIDS
-//        genreLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        let genreLabel = UILabel()
+        let movieGenreIds = movie.genreIDS
+        let genreNames = GenreManager.shared.genreNames(from: movieGenreIds)
+        genreLabel.text = genreNames
+        genreLabel.font = UIFont.boldSystemFont(ofSize: 16)
         
         let voteLabel = UILabel()
         voteLabel.text = movie.voteAverage.formattedWithSeparator
@@ -99,7 +102,7 @@ class ViewController: UIViewController {
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont.systemFont(ofSize: 14)
         
-        let stack = UIStackView(arrangedSubviews: [imageView, titleLabel, voteLabel, descriptionLabel])
+        let stack = UIStackView(arrangedSubviews: [imageView, titleLabel, genreLabel, voteLabel, descriptionLabel])
         stack.axis = .vertical
         stack.spacing = 8
         stack.translatesAutoresizingMaskIntoConstraints = false

@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2ACE9E7A2BD65DB1000E4669 /* MovieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E792BD65DB1000E4669 /* MovieService.swift */; };
+		2ACE9E7A2BD65DB1000E4669 /* MovieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E792BD65DB1000E4669 /* MovieManager.swift */; };
 		2ACE9E7D2BD65F3D000E4669 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACE9E7C2BD65F3D000E4669 /* SDWebImage */; };
 		2ACE9E7F2BD669B8000E4669 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E7E2BD669B8000E4669 /* Formatter.swift */; };
 		2ACE9E812BD66A1F000E4669 /* Numeric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E802BD66A1F000E4669 /* Numeric.swift */; };
+		2ACE9E832BD674AF000E4669 /* GenreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E822BD674AF000E4669 /* GenreManager.swift */; };
 		3CD56FD72BD6451200687344 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD56FD62BD6451200687344 /* AppDelegate.swift */; };
 		3CD56FD92BD6451200687344 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD56FD82BD6451200687344 /* SceneDelegate.swift */; };
 		3CD56FDB2BD6451200687344 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD56FDA2BD6451200687344 /* ViewController.swift */; };
@@ -22,9 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2ACE9E792BD65DB1000E4669 /* MovieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieService.swift; sourceTree = "<group>"; };
+		2ACE9E792BD65DB1000E4669 /* MovieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieManager.swift; sourceTree = "<group>"; };
 		2ACE9E7E2BD669B8000E4669 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		2ACE9E802BD66A1F000E4669 /* Numeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numeric.swift; sourceTree = "<group>"; };
+		2ACE9E822BD674AF000E4669 /* GenreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreManager.swift; sourceTree = "<group>"; };
 		3CD56FD32BD6451200687344 /* TicketKing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TicketKing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CD56FD62BD6451200687344 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3CD56FD82BD6451200687344 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,7 +61,8 @@
 		2ACE9E722BD65764000E4669 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				2ACE9E792BD65DB1000E4669 /* MovieService.swift */,
+				2ACE9E792BD65DB1000E4669 /* MovieManager.swift */,
+				2ACE9E822BD674AF000E4669 /* GenreManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -139,11 +142,11 @@
 				2ACE9E742BD6577F000E4669 /* Resources */,
 				2ACE9E732BD65771000E4669 /* Extensions */,
 				2ACE9E722BD65764000E4669 /* Networking */,
-				2ACE9E712BD6574E000E4669 /* mgynsz */,
 				3CD56FE72BD6451500687344 /* Info.plist */,
 				3CD56FDF2BD6451200687344 /* TicketKing.xcdatamodeld */,
 				3CD56FDC2BD6451200687344 /* Main.storyboard */,
 				3CD56FE42BD6451500687344 /* LaunchScreen.storyboard */,
+				2ACE9E712BD6574E000E4669 /* mgynsz */,
 			);
 			path = TicketKing;
 			sourceTree = "<group>";
@@ -225,7 +228,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2ACE9E7A2BD65DB1000E4669 /* MovieService.swift in Sources */,
+				2ACE9E832BD674AF000E4669 /* GenreManager.swift in Sources */,
+				2ACE9E7A2BD65DB1000E4669 /* MovieManager.swift in Sources */,
 				3CD56FE12BD6451200687344 /* TicketKing.xcdatamodeld in Sources */,
 				3CD56FDB2BD6451200687344 /* ViewController.swift in Sources */,
 				2ACE9E812BD66A1F000E4669 /* Numeric.swift in Sources */,
