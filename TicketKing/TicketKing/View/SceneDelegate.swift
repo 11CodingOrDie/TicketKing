@@ -20,7 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navigationController = UINavigationController(rootViewController: loginViewController)
         
         window = UIWindow(windowScene: windowScene)
+      
         window?.rootViewController = navigationController
+
+        window?.rootViewController = LogInViewController() // 원하는 뷰컨트롤러로 변경해주기
         window?.makeKeyAndVisible()
     }
 
