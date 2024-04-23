@@ -14,6 +14,7 @@
 		2A52141D2BD7828D00E5E4A6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2A52141C2BD7828D00E5E4A6 /* SnapKit */; };
 		2A52141F2BD7828D00E5E4A6 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 2A52141E2BD7828D00E5E4A6 /* SnapKit-Dynamic */; };
 		2A5214222BD7972F00E5E4A6 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5214212BD7972F00E5E4A6 /* KeychainSwift */; };
+		2A5214252BD7DBD200E5E4A6 /* LabeledTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5214242BD7DBD200E5E4A6 /* LabeledTextField.swift */; };
 		2ACE9E7A2BD65DB1000E4669 /* MovieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E792BD65DB1000E4669 /* MovieManager.swift */; };
 		2ACE9E7D2BD65F3D000E4669 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACE9E7C2BD65F3D000E4669 /* SDWebImage */; };
 		2ACE9E7F2BD669B8000E4669 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E7E2BD669B8000E4669 /* Formatter.swift */; };
@@ -36,6 +37,7 @@
 		2A5214152BD73C3800E5E4A6 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		2A5214172BD73C9500E5E4A6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		2A5214192BD73E7300E5E4A6 /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		2A5214242BD7DBD200E5E4A6 /* LabeledTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledTextField.swift; sourceTree = "<group>"; };
 		2ACE9E792BD65DB1000E4669 /* MovieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieManager.swift; sourceTree = "<group>"; };
 		2ACE9E7E2BD669B8000E4669 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		2ACE9E802BD66A1F000E4669 /* Numeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numeric.swift; sourceTree = "<group>"; };
@@ -69,6 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A5214232BD7DB7D00E5E4A6 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				2A5214242BD7DBD200E5E4A6 /* LabeledTextField.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		2ACE9E712BD6574E000E4669 /* mgynsz */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +179,7 @@
 				3CD56FDF2BD6451200687344 /* TicketKing.xcdatamodeld */,
 				3CD56FDC2BD6451200687344 /* Main.storyboard */,
 				3CD56FE42BD6451500687344 /* LaunchScreen.storyboard */,
+				2A5214232BD7DB7D00E5E4A6 /* Component */,
 				2ACE9E712BD6574E000E4669 /* mgynsz */,
 			);
 			path = TicketKing;
@@ -268,6 +279,7 @@
 				2ACE9E832BD674AF000E4669 /* GenreManager.swift in Sources */,
 				2ACE9E7A2BD65DB1000E4669 /* MovieManager.swift in Sources */,
 				3CD56FE12BD6451200687344 /* TicketKing.xcdatamodeld in Sources */,
+				2A5214252BD7DBD200E5E4A6 /* LabeledTextField.swift in Sources */,
 				3CD56FDB2BD6451200687344 /* ViewController.swift in Sources */,
 				2ACE9E812BD66A1F000E4669 /* Numeric.swift in Sources */,
 				2ACE9E7F2BD669B8000E4669 /* Formatter.swift in Sources */,
@@ -357,7 +369,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -414,7 +426,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
