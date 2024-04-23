@@ -159,8 +159,8 @@
 		959C78702BD74969001DAFFD /* DDattj */ = {
 			isa = PBXGroup;
 			children = (
-				959C78712BD749F5001DAFFD /* MainViewController.swift */,
 				959C787F2BD7648D001DAFFD /* MainCollectionViewCell.swift */,
+				959C78712BD749F5001DAFFD /* MainViewController.swift */,
 			);
 			path = DDattj;
 			sourceTree = "<group>";

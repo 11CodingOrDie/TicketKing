@@ -8,76 +8,119 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    //사용할 컬렉션뷰, 테이블뷰 이름 지정
-    let releasedMovie: UICollectionView
-    let comingUpMovie: UITableView
+    var movies: [MovieModel] = []
+    var releasedMovieView: UICollectionView!
+    var comingUpMovieView: UITableView!
+    var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
     
-    //클래스 초기화 시 기본적으로 유지할 데이터를 남기기 위해 작성
-    init() {
-        self.releasedMovie = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-        self.comingUpMovie = UITableView(frame: .zero, style: .plain)
-        
-        super.init(nibName: nil, bundle: nil)
-    }
+    // 브랜드 로고 넣기
+    private let brandLogo: UIImageView = {
+        let appTitle = UIImageView(image: UIImage(named: "title"))
+        // 이미지 뷰의 크기 설정
+        appTitle.frame.size = CGSize(width: 138, height: 29.58)
+        return appTitle
+    }()
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    //프로필 이미지칸 만들기
+    private let profileImage: (UIView, UIImageView) = {
+        let myimage = UIView()
+        let person = UIImageView(image: UIImage(named: "personIC"))
+        myimage.frame.size = CGSize(width: 44, height: 44)
+        person.frame.size = CGSize(width: 30, height: 30)
+        myimage.backgroundColor = UIColor(named: "kGreen")
+        myimage.layer.masksToBounds = true
+        myimage.layer.cornerRadius = 10
+        return (myimage, person) // 2개를 함께 추출하고 싶다면 타입 안에 2개를 넣기
+    }()
+    
+    //글 불러오기
+    private let title1: UILabel = {
+        let relesedTitle = UILabel()
+        relesedTitle.text = "현재상영작"
+        relesedTitle.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        relesedTitle.frame.size = CGSize(width: 74, height: 22)
+        return relesedTitle
+    }()
+    
+    private let title2: UILabel = {
+        let relesedTitle = UILabel()
+        relesedTitle.text = "상영예정작"
+        relesedTitle.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        relesedTitle.frame.size = CGSize(width: 74, height: 22)
+        return relesedTitle
+    }()
+    
+    //더보기버튼
+    private let seeAllMovies: UIButton = {
+        let moreFilms = UIButton()
+        moreFilms.titleLabel?.text = "더보기>>"
+        moreFilms.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        moreFilms.backgroundColor = .systemBackground
+        return moreFilms
+    }()
+    
+    //상영예정 더보기버튼
+    private let seeUpComingMovies: UIButton = {
+        let moreFilms = UIButton()
+        moreFilms.titleLabel?.text = "더보기>>"
+        moreFilms.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+        moreFilms.backgroundColor = .systemBackground
+        return moreFilms
+    }()
+    
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        //브랜드로고 넣기
-        let appTitle = UIImage(named: "title")
-        let imageView = UIImageView(image: appTitle!)
-        imageView.frame = CGRect(x: 25, y: 80, width: 138, height: 29.58)
-        self.view.addSubview(imageView)
-        self.view.bringSubviewToFront(imageView)
-        
-        //프로필 이미지칸 만들기
-        let myimage = UIView()
-        myimage.backgroundColor = UIColor(named: <#T##String#>)
-        
+        collectionView()
     }
     
     
     
+    
+    //컬렉션뷰 설정
+    func collectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
+        collectionView.showsHorizontalScrollIndicator = false
+        // 추가적인 설정 가능
+        
+        view.addSubview(releasedMovieView)
+        view.addSubview(comingUpMovieView)
+        releasedMovieView.dataSource = self
+        releasedMovieView.delegate = self
+        releasedMovieView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
+        
+    }
     
     //컬렉션뷰 한 줄에 몇개
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movies.count
     }
+    
     //컬렉션뷰 cell은 어떤 모양으로
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainCollectionViewCell", for: indexPath) as? MainCollectionViewCell else {
-            return UICollectionViewCell()
+            fatalError("error")
         }
+        cell.configure(with: movies[indexPath.item])
         return cell
     }
-    //컬렉션뷰의 사이즈
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 393, height: 354)
-    }
-    //컬렉션뷰 cell의 간격과 사이즈 지정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 35 //상하간격
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 24.05 //좌우간격
-    }
     
-    
-    
-    
-    //위에서 설정해준 컬렉션뷰 기본설정 적용
-    func releasedMoviePoster() {
-        releasedMovie.register(MainViewController.self, forCellWithReuseIdentifier: "MainCollectionViewCell")
-        releasedMovie.delegate = self
-        releasedMovie.dataSource = self
+    func configurereleasedMovieViewConstaint() {
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 100)
+        ])
     }
 }
+
