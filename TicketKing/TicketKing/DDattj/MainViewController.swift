@@ -8,30 +8,9 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    //컬렉션뷰 한 줄에 몇개
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    //컬렉션뷰 cell은 어떤 모양으로
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainCollectionViewCell", for: indexPath) as? MainCollectionViewCell else {
-            return UICollectionViewCell()
-        }
-        return cell
-    }
-    //컬렉션뷰의 사이즈
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 393, height: 354)
-    }
-    
-    
-    
-    
-    //사용할 매서드 선언하기
+    //사용할 컬렉션뷰, 테이블뷰 이름 지정
     let releasedMovie: UICollectionView
     let comingUpMovie: UITableView
     
@@ -51,6 +30,45 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        //브랜드로고 넣기
+        let appTitle = UIImage(named: "title")
+        let imageView = UIImageView(image: appTitle!)
+        imageView.frame = CGRect(x: 25, y: 80, width: 138, height: 29.58)
+        self.view.addSubview(imageView)
+        self.view.bringSubviewToFront(imageView)
+        
+        //프로필 이미지칸 만들기
+        let myimage = UIView()
+        myimage.backgroundColor = UIColor(named: <#T##String#>)
+        
+    }
+    
+    
+    
+    
+    //컬렉션뷰 한 줄에 몇개
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    //컬렉션뷰 cell은 어떤 모양으로
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainCollectionViewCell", for: indexPath) as? MainCollectionViewCell else {
+            return UICollectionViewCell()
+        }
+        return cell
+    }
+    //컬렉션뷰의 사이즈
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 393, height: 354)
+    }
+    //컬렉션뷰 cell의 간격과 사이즈 지정
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 35 //상하간격
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 24.05 //좌우간격
     }
     
     
@@ -63,25 +81,3 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         releasedMovie.dataSource = self
     }
 }
-
-
-
-
-//cell에 관련한 설정을 추가해주기 위해 extention class
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    
-    //컬렉션뷰 cell의 간격과 사이즈 지정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 35 //상하간격
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 24.05 //좌우간격
-    }
-    func collectionView(
-          _ collectionView: UICollectionView,
-          layout collectionViewLayout: UICollectionViewLayout,
-          sizeForItemAt indexPath: IndexPath
-          ) -> CGSize {
-              return CGSize(width: 221, height: 279)
-        }
-    }
