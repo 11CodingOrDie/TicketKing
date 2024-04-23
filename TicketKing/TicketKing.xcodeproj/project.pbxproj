@@ -27,6 +27,8 @@
 		3CD56FE32BD6451500687344 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CD56FE22BD6451500687344 /* Assets.xcassets */; };
 		3CD56FE62BD6451500687344 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3CD56FE52BD6451500687344 /* Base */; };
 		3CD56FEE2BD6472100687344 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD56FED2BD6472100687344 /* Movie.swift */; };
+		959C78722BD749F5001DAFFD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959C78712BD749F5001DAFFD /* MainViewController.swift */; };
+		959C78802BD7648D001DAFFD /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959C787F2BD7648D001DAFFD /* MainCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,8 @@
 		3CD56FE52BD6451500687344 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3CD56FE72BD6451500687344 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3CD56FED2BD6472100687344 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		959C78712BD749F5001DAFFD /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		959C787F2BD7648D001DAFFD /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +157,7 @@
 		3CD56FD52BD6451200687344 /* TicketKing */ = {
 			isa = PBXGroup;
 			children = (
+				959C78702BD74969001DAFFD /* DDattj */,
 				2ACE9E782BD657B3000E4669 /* ViewModel */,
 				2ACE9E772BD657AA000E4669 /* View */,
 				2ACE9E762BD6579B000E4669 /* Controller */,
@@ -167,6 +172,15 @@
 				2ACE9E712BD6574E000E4669 /* mgynsz */,
 			);
 			path = TicketKing;
+			sourceTree = "<group>";
+		};
+		959C78702BD74969001DAFFD /* DDattj */ = {
+			isa = PBXGroup;
+			children = (
+				959C787F2BD7648D001DAFFD /* MainCollectionViewCell.swift */,
+				959C78712BD749F5001DAFFD /* MainViewController.swift */,
+			);
+			path = DDattj;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,10 +274,12 @@
 				2A52141A2BD73E7300E5E4A6 /* LogInViewController.swift in Sources */,
 				2A5214182BD73C9500E5E4A6 /* SignUpViewController.swift in Sources */,
 				3CD56FEE2BD6472100687344 /* Movie.swift in Sources */,
+				959C78802BD7648D001DAFFD /* MainCollectionViewCell.swift in Sources */,
 				3CD56FD72BD6451200687344 /* AppDelegate.swift in Sources */,
 				2A5214142BD73C1E00E5E4A6 /* User.swift in Sources */,
 				2A5214162BD73C3800E5E4A6 /* UserManager.swift in Sources */,
 				3CD56FD92BD6451200687344 /* SceneDelegate.swift in Sources */,
+				959C78722BD749F5001DAFFD /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
