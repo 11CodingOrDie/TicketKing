@@ -9,8 +9,8 @@ import UIKit
 import SDWebImage
 
 class ViewController: UIViewController {
-    private var movies: [MovieModel] = []
     
+    private var movies: [MovieModel] = []
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
