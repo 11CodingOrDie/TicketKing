@@ -10,7 +10,7 @@ import UIKit
 private let reuseIdentifier = "Cell"
 
 class MainCollectionViewController: UICollectionViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -84,5 +84,5 @@ class MainCollectionViewController: UICollectionViewController {
     
     }
     */
-    
+
 }
