@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A5214142BD73C1E00E5E4A6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5214132BD73C1E00E5E4A6 /* User.swift */; };
+		2A5214162BD73C3800E5E4A6 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5214152BD73C3800E5E4A6 /* UserManager.swift */; };
+		2A5214182BD73C9500E5E4A6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5214172BD73C9500E5E4A6 /* SignUpViewController.swift */; };
+		2A52141A2BD73E7300E5E4A6 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5214192BD73E7300E5E4A6 /* LogInViewController.swift */; };
+		2A52141D2BD7828D00E5E4A6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2A52141C2BD7828D00E5E4A6 /* SnapKit */; };
+		2A52141F2BD7828D00E5E4A6 /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 2A52141E2BD7828D00E5E4A6 /* SnapKit-Dynamic */; };
+		2A5214222BD7972F00E5E4A6 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5214212BD7972F00E5E4A6 /* KeychainSwift */; };
 		2ACE9E7A2BD65DB1000E4669 /* MovieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E792BD65DB1000E4669 /* MovieManager.swift */; };
 		2ACE9E7D2BD65F3D000E4669 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ACE9E7C2BD65F3D000E4669 /* SDWebImage */; };
 		2ACE9E7F2BD669B8000E4669 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE9E7E2BD669B8000E4669 /* Formatter.swift */; };
@@ -25,6 +32,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A5214132BD73C1E00E5E4A6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2A5214152BD73C3800E5E4A6 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		2A5214172BD73C9500E5E4A6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		2A5214192BD73E7300E5E4A6 /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		2ACE9E792BD65DB1000E4669 /* MovieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieManager.swift; sourceTree = "<group>"; };
 		2ACE9E7E2BD669B8000E4669 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		2ACE9E802BD66A1F000E4669 /* Numeric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Numeric.swift; sourceTree = "<group>"; };
@@ -49,6 +60,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2ACE9E7D2BD65F3D000E4669 /* SDWebImage in Frameworks */,
+				2A52141D2BD7828D00E5E4A6 /* SnapKit in Frameworks */,
+				2A5214222BD7972F00E5E4A6 /* KeychainSwift in Frameworks */,
+				2A52141F2BD7828D00E5E4A6 /* SnapKit-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +72,8 @@
 		2ACE9E712BD6574E000E4669 /* mgynsz */ = {
 			isa = PBXGroup;
 			children = (
+				2A5214192BD73E7300E5E4A6 /* LogInViewController.swift */,
+				2A5214172BD73C9500E5E4A6 /* SignUpViewController.swift */,
 			);
 			path = mgynsz;
 			sourceTree = "<group>";
@@ -67,6 +83,7 @@
 			children = (
 				2ACE9E792BD65DB1000E4669 /* MovieManager.swift */,
 				2ACE9E822BD674AF000E4669 /* GenreManager.swift */,
+				2A5214152BD73C3800E5E4A6 /* UserManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -92,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				3CD56FED2BD6472100687344 /* Movie.swift */,
+				2A5214132BD73C1E00E5E4A6 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -183,6 +201,9 @@
 			name = TicketKing;
 			packageProductDependencies = (
 				2ACE9E7C2BD65F3D000E4669 /* SDWebImage */,
+				2A52141C2BD7828D00E5E4A6 /* SnapKit */,
+				2A52141E2BD7828D00E5E4A6 /* SnapKit-Dynamic */,
+				2A5214212BD7972F00E5E4A6 /* KeychainSwift */,
 			);
 			productName = TicketKing;
 			productReference = 3CD56FD32BD6451200687344 /* TicketKing.app */;
@@ -214,6 +235,8 @@
 			mainGroup = 3CD56FCA2BD6451200687344;
 			packageReferences = (
 				2ACE9E7B2BD65F3D000E4669 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				2A52141B2BD7828D00E5E4A6 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				2A5214202BD7972F00E5E4A6 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			productRefGroup = 3CD56FD42BD6451200687344 /* Products */;
 			projectDirPath = "";
@@ -248,9 +271,13 @@
 				3CD56FDB2BD6451200687344 /* ViewController.swift in Sources */,
 				2ACE9E812BD66A1F000E4669 /* Numeric.swift in Sources */,
 				2ACE9E7F2BD669B8000E4669 /* Formatter.swift in Sources */,
+				2A52141A2BD73E7300E5E4A6 /* LogInViewController.swift in Sources */,
+				2A5214182BD73C9500E5E4A6 /* SignUpViewController.swift in Sources */,
 				3CD56FEE2BD6472100687344 /* Movie.swift in Sources */,
 				959C78802BD7648D001DAFFD /* MainCollectionViewCell.swift in Sources */,
 				3CD56FD72BD6451200687344 /* AppDelegate.swift in Sources */,
+				2A5214142BD73C1E00E5E4A6 /* User.swift in Sources */,
+				2A5214162BD73C3800E5E4A6 /* UserManager.swift in Sources */,
 				3CD56FD92BD6451200687344 /* SceneDelegate.swift in Sources */,
 				959C78722BD749F5001DAFFD /* MainViewController.swift in Sources */,
 			);
@@ -487,6 +514,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2A52141B2BD7828D00E5E4A6 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		2A5214202BD7972F00E5E4A6 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 22.0.0;
+			};
+		};
 		2ACE9E7B2BD65F3D000E4669 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
@@ -498,6 +541,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2A52141C2BD7828D00E5E4A6 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A52141B2BD7828D00E5E4A6 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		2A52141E2BD7828D00E5E4A6 /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A52141B2BD7828D00E5E4A6 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+		2A5214212BD7972F00E5E4A6 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A5214202BD7972F00E5E4A6 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
 		2ACE9E7C2BD65F3D000E4669 /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2ACE9E7B2BD65F3D000E4669 /* XCRemoteSwiftPackageReference "SDWebImage" */;
