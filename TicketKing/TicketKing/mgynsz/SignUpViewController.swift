@@ -88,7 +88,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
+//        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
     private func setupNavigation() {
@@ -118,13 +118,13 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     private func setupScrollView() {
-        view.addSubview(scrollView)
+//        view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.left.right.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(signUpButton.snp.top)
         }
 
-        scrollView.addSubview(contentView)
+//        scrollView.addSubview(contentView)
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalTo(view)
@@ -133,6 +133,8 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     private func setupSignUpButton() {
+//        view.addSubview(signUpButton)
+        
         signUpButton.snp.makeConstraints { make in
             make.left.right.equalTo(view).inset(16)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-16)
