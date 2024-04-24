@@ -10,6 +10,7 @@ import UIKit
 
 class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    
     var movies: [MovieModel] = []
     var releasedMovieView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -89,6 +90,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         
         view.addSubview(releasedMovieView)
         releasedMovieView.dataSource = self
@@ -125,22 +127,55 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            let itemSpacing : CGFloat = 10
-            let myWidth : CGFloat = (collectionView.bounds.width - itemSpacing * 2) / 3
-            
-            return CGSize(width: myWidth, height: myWidth)
-        }
-    
-    
     func configurereleasedMovieViewConstaint() {
         releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 210),
             releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            releasedMovieView.heightAnchor.constraint(equalToConstant: 100)
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 288)
         ])
+        
+        brandLogo.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            brandLogo.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            brandLogo.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            brandLogo.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: CGFloat),
+            brandLogo.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 210),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 288)
+        ])
+        
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 210),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 288)
+        ])
+        
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 210),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 288)
+        ])
+        
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 210),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 288)
+        ])
+        
     }
 }
 
