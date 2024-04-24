@@ -8,10 +8,22 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     var movies: [MovieModel] = []
-    var releasedMovieView: UICollectionView = UICollectionView()
+    var releasedMovieView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10 // 행 사이 최소간격
+        layout.scrollDirection = .horizontal // 스크롤 방향 지정
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // 섹션 여백 지정
+        
+        let width: CGFloat = 393
+        let height: CGFloat = 288
+        let frame = CGRect(x: 0, y: 210, width: width, height: height)
+        let cv = UICollectionView(frame: frame, collectionViewLayout: layout) // 크기 0인 프레임 사용
+        return cv
+    }()
+    
     var comingUpMovieView: UITableView = UITableView()
     var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
     
@@ -75,53 +87,60 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
-        
     override func viewDidLoad() {
-            super.viewDidLoad()
-            collectionView()
-            
-            view.addSubview(releasedMovieView)
-            releasedMovieView.dataSource = self
-            releasedMovieView.delegate = self
-            releasedMovieView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
-            
-            configurereleasedMovieViewConstaint()
-        }
+        super.viewDidLoad()
         
+        view.addSubview(releasedMovieView)
+        releasedMovieView.dataSource = self
+        releasedMovieView.delegate = self
+        releasedMovieView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.identifier)
         
-    
-        
-        //컬렉션뷰 설정
-        func collectionView() {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-            let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            collectionView.showsHorizontalScrollIndicator = false
-            // 추가적인 설정 가능
-        }
-        
-        //컬렉션뷰 한 줄에 몇개
-        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return movies.count
-        }
-        
-        //컬렉션뷰 cell은 어떤 모양으로
-        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
-                fatalError("error")
-            }
-            cell.configure(with: movies[indexPath.item])
-            return cell
-        }
-        
-        func configurereleasedMovieViewConstaint() {
-            releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-                releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-                releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-                releasedMovieView.heightAnchor.constraint(equalToConstant: 100)
-            ])
-        }
+        collectionView()
+        configurereleasedMovieViewConstaint()
     }
+    
+    
+    
+    
+    //컬렉션뷰 설정
+    func collectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.showsHorizontalScrollIndicator = false
+        // 추가적인 설정 가능
+    }
+    
+    //컬렉션뷰 한 줄에 몇개
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return movies.count
+    }
+    
+    //컬렉션뷰 cell은 어떤 모양으로
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
+            fatalError("error")
+        }
+        cell.configure(with: movies[indexPath.item])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            let itemSpacing : CGFloat = 10
+            let myWidth : CGFloat = (collectionView.bounds.width - itemSpacing * 2) / 3
+            
+            return CGSize(width: myWidth, height: myWidth)
+        }
+    
+    
+    func configurereleasedMovieViewConstaint() {
+        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+}
 

@@ -19,12 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-<<<<<<< HEAD
         window?.rootViewController = MainViewController() // 원하는 뷰컨트롤러로 변경해주기 //합치기 전에는 LogInViewController 로 바꾸기
-=======
-
-        window?.rootViewController = LogInViewController() // 원하는 뷰컨트롤러로 변경해주기
->>>>>>> f89daa8a9cfd1903a3ba978c708c6b0cc2012433
         window?.makeKeyAndVisible()
     }
 
