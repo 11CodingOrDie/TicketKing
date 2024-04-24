@@ -50,6 +50,8 @@ class ViewController: UIViewController {
         ])
     }
     
+    
+    
     private func fetchMovieData() {
         Task {
             await GenreManager.shared.loadGenresAsync()
