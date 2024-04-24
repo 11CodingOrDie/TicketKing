@@ -115,6 +115,7 @@ class MovieInfoCell: UIView {
             directorLabel.isHidden = viewMode == .compact
             
             titleLabel.text = movie.title
+            
             if !movie.posterPath.isEmpty {
                 let url = URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)")
                 imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
