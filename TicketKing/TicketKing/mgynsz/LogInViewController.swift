@@ -135,7 +135,13 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)  // 모든 텍스트 필드의 편집을 종료하고 키보드를 숨깁니다.
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        print("textFieldShouldReturn: \(textField.placeholder ?? "")")
+        return true
+    }
+    
+    private func textFieldDidBeginEditing(_ textField: UITextField) -> Bool {
         if textField == userIDTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
             textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
@@ -143,6 +149,8 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
             textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
         }
+        print("textFieldShouldBeginEditing: \(textField.placeholder ?? "")")
+            return true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -251,6 +259,12 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             return false
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        userIDTextField.becomeFirstResponder()
+    }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
