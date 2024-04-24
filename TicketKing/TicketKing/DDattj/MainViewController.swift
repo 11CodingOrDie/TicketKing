@@ -15,6 +15,9 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     var comingUpMovieView: UITableView = UITableView()
     var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
     
+    
+    
+    
     // 브랜드 로고 넣기
     let brandLogo: UIImageView = {
         let appTitle = UIImageView(image: UIImage(named: "title"))
