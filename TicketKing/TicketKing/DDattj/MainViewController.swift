@@ -17,7 +17,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
-    
     // 브랜드 로고 넣기
     let brandLogo: UIImageView = {
         let appTitle = UIImageView(image: UIImage(named: "title"))
