@@ -261,26 +261,26 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
     }
     
-    // 키보드가 나타날 때 호출되는 메서드
+    // 키보드가 나타날 때 호출 메서드
     @objc private func keyboardWillShow(notification: Notification) {
         guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
         
-        // 키보드의 높이를 구합니다.
+        // 키보드의 높이를 알아챔
         let keyboardHeight = keyboardFrame.height
         
-        // 스크롤뷰의 콘텐츠를 키보드 높이만큼 조정합니다.
+        // 스크롤뷰의 콘텐츠를 키보드 높이만큼 조정
         scrollView.contentInset.bottom = keyboardHeight
     }
 
-    // 키보드가 사라질 때 호출되는 메서드
+    // 키보드가 사라질 때 호출 메서드
     @objc private func keyboardWillHide(notification: Notification) {
         // 스크롤뷰의 콘텐츠 인셋을 초기화합니다.
         scrollView.contentInset = .zero
     }
 
-    // 뷰가 나타날 때 키보드 관련 알림을 등록합니다.
+    // 뷰가 나타날 때 키보드 관련 알림을 등록!!
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)

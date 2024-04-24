@@ -35,7 +35,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         // 텍스트 필드의 leftView에 imageView 추가
         let symbolView = UIView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
-        imageView.frame = CGRect(x: 10, y: 14, width: 20, height: 20) // imageView 위치 조정
+        imageView.frame = CGRect(x: 10, y: 14, width: 20, height: 20)
         symbolView.addSubview(imageView)
         
         textField.leftView = symbolView
@@ -144,10 +144,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     private func textFieldDidBeginEditing(_ textField: UITextField) -> Bool {
         if textField == userIDTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
-            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
+            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor
         } else if textField == passwordTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
-            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
+            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor
         }
         print("textFieldShouldBeginEditing: \(textField.placeholder ?? "")")
             return true
@@ -227,7 +227,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         }
     }
     private func proceedToMainInterface() {
-        let mainViewController = ViewController()  // MainViewController는 메인 인터페이스의 뷰 컨트롤러를 가리킵니다.
+        let mainViewController = ViewController()
         mainViewController.modalPresentationStyle = .fullScreen
         present(mainViewController, animated: true)
     }
@@ -268,7 +268,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        view.endEditing(true)  // 키보드 숨김
+        view.endEditing(true)
     }
 }
 

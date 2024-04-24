@@ -64,7 +64,7 @@ class LabeledTextField: UIView, UITextFieldDelegate {
     private func setupConstraints() {
         label.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(8)
-            make.trailing.lessThanOrEqualToSuperview().offset(-16)  // Ensure it doesn't overlap with instructionLabel
+            make.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
         
         textField.snp.makeConstraints { make in
@@ -73,9 +73,9 @@ class LabeledTextField: UIView, UITextFieldDelegate {
         }
         
         instructionLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(label.snp.centerY)  // Align vertically with the label
-            make.leading.equalTo(label.snp.trailing).offset(16)  // 16 points away from label's trailing
-            make.trailing.lessThanOrEqualToSuperview().offset(-32)  // Ensure it doesn't go off the edge
+            make.centerY.equalTo(label.snp.centerY)
+            make.leading.equalTo(label.snp.trailing).offset(16)
+            make.trailing.lessThanOrEqualToSuperview().offset(-32)
         }
     }
 

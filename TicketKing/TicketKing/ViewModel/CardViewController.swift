@@ -23,14 +23,13 @@ class CardViewController: UIViewController, UICollectionViewDataSource, UICollec
         fetchPopularMovies()
         fetchUpcomingMovies()
     }
-
-    // 인기 영화 데이터 가져오기
-    private func fetchPopularMovies() {
+    
+    private func fetchPopularMovies(language: String = "ko-KR", page: Int = 1) {
         Task {
             await GenreManager.shared.loadGenresAsync()
             do {
-                let movieResponse = try await MovieManager.shared.fetchMovies(endpoint: "popular")
-                self.popularMovies = movieResponse.results
+                let popularMovies = try await MovieManager.shared.fetchPopularMovies(page: page, language: language)
+                self.popularMovies = popularMovies
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
@@ -39,14 +38,14 @@ class CardViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
         }
     }
-    
+
     // 상영 예정 영화 데이터 가져오기
-    private func fetchUpcomingMovies() {
+    private func fetchUpcomingMovies(language: String = "ko-KR", page: Int = 1) {
         Task {
             await GenreManager.shared.loadGenresAsync()
             do {
-                let movieResponse = try await MovieManager.shared.fetchMovies(endpoint: "upcoming")
-                self.upcomingMovies = movieResponse.results
+                let upComingMovies = try await MovieManager.shared.fetchUpcomingMovies(page: page, language: language)
+                self.upcomingMovies = upComingMovies
                 DispatchQueue.main.async {
                     self.secondCollectionView.reloadData()
                 }
