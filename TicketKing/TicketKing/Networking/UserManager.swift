@@ -9,12 +9,13 @@ import Foundation
 
 
 class UserManager {
+    
     static let shared = UserManager()
     
     func saveUser(user: User) {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(user) {
-            UserDefaults.standard.set(encoded, forKey: user.username)
+            UserDefaults.standard.set(encoded, forKey: user.userID)
         }
     }
     
