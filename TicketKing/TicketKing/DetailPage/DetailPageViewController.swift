@@ -27,7 +27,16 @@ class DetailPageViewController: UIViewController {
     let movieDescriptionLabel = UILabel()
     let actorLabel = UILabel()
     
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    var actorListColletionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = .zero
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .black
+        return cv
+    }()
     
     
     override func viewDidLoad() {
@@ -35,7 +44,9 @@ class DetailPageViewController: UIViewController {
         setupConstraints()
         configureUI()
         loadData()
-//
+
+        actorListColletionView.delegate = self
+        actorListColletionView.dataSource = self
     }
     
     func setupConstraints() { // addSubview, 오토레이아웃 등
@@ -52,7 +63,7 @@ class DetailPageViewController: UIViewController {
         contentView.addSubview(movieDescription)
         contentView.addSubview(movieDescriptionLabel)
         contentView.addSubview(actorLabel)
-        contentView.addSubview(collectionView)
+        contentView.addSubview(actorListColletionView)
         
  
         scrollView.snp.makeConstraints {
@@ -128,8 +139,15 @@ class DetailPageViewController: UIViewController {
         actorLabel.snp.makeConstraints { make in
             make.top.equalTo(movieDescriptionLabel.snp.bottom).offset(30)
             make.leading.equalTo(movieDescriptionLabel.snp.leading)
+//            make.bottom.equalToSuperview()
+        }
+        
+        actorListColletionView.snp.makeConstraints { make in
+            make.top.equalTo(actorLabel.snp.bottom).offset(10)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.height.equalTo(80)
             make.bottom.equalToSuperview()
-            
         }
     }
     
@@ -182,11 +200,8 @@ class DetailPageViewController: UIViewController {
         actorLabel.textColor = .white
         actorLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         
-        collectionView.backgroundColor = .white
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(ActorCollectionViewCell.self, forCellWithReuseIdentifier: ActorCollectionViewCell.identify)
-//        collectionView.collectionViewLayout.scro
+        actorListColletionView.backgroundColor = .blue
+        actorListColletionView.register(ActorCollectionViewCell.self, forCellWithReuseIdentifier: ActorCollectionViewCell.identifier)
         
 
     }
@@ -213,15 +228,23 @@ class DetailPageViewController: UIViewController {
     }
 }
 
-extension DetailPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension DetailPageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ActorCollectionViewCell.identify, for: indexPath) as? ActorCollectionViewCell else { return UICollectionViewCell()}
+        guard let cell = actorListColletionView.dequeueReusableCell(withReuseIdentifier: ActorCollectionViewCell.identifier, for: indexPath) as? ActorCollectionViewCell else { return UICollectionViewCell() }
+        
         
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //        let width = actorListColletionView.frame.width
+        //        let height = actorListColletionView.frame.height
+        //
+        //        return CGSize(width: width, height: height)
+        return CGSize(width: 125, height: 57)
+    }
 }
