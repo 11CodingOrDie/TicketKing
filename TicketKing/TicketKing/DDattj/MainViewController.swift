@@ -26,12 +26,13 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
+    
     // 브랜드 로고 넣기
     let brandLogo: UIImageView = {
         let appTitle = UIImageView(image: UIImage(named: "title"))
         return appTitle
     }()
-    
+
     //프로필 이미지칸 만들기
     let profileImage: (UIView, UIImageView) = {
         let myimage = UIView()
@@ -84,6 +85,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         tableView()
         collectionView()
+        fetchMovieData()
+        addMoviesToCollectionView()
         configurereleasedMovieViewConstaint()
         configureComingUpMovieViewConstaint()
         
@@ -97,9 +100,31 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         view.addSubview(seeAllMovies)
         view.addSubview(seeUpComingMovies)
         autoLayout()
-        
-        fetchMovieData()
     }
+    
+    
+    
+    
+    //데이터 불러오기, 지정된 형식에 맞춰 불러올 정보 작성
+    private func fetchMovieData() {
+        Task {
+            await GenreManager.shared.loadGenresAsync()
+            do {
+                let movieData = try await MovieManager.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR") //랭킹순을 한국어로 가져오겠다
+                DispatchQueue.main.async {
+                    self.movies = movieData.results //가져온 정보 movies에 저장
+                    self.addMoviesToCollectionView() //movies에 저장된 정보 처리기관 설정
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    print("An error occurred: \(error)")
+                }
+            }
+        }
+    }
+    private func addMoviesToCollectionView() {
+        releasedMovieView.reloadData()
+    } //지정한 컬렉션뷰로 데이터 이동
     
     
     
@@ -115,7 +140,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         releasedMovieView.delegate = self
         view.addSubview(releasedMovieView)
     }
-    
+
     //컬렉션뷰 한 줄에 몇개
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 10
@@ -175,40 +200,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 88 // 원하는 높이를 리턴합니다.
-    }
-    
-    
-    
-    
-    
-    //데이터 불러오기, 지정된 형식에 맞춰 불러올 정보 작성
-    private func fetchMovieData() {
-        Task {
-            await GenreManager.shared.loadGenresAsync()
-            do {
-                let movieData = try await MovieManager.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR") //랭킹순을 한국어로 가져오겠다
-                DispatchQueue.main.async {
-                    self.movies = movieData.results
-                     //정보 사용할곳 지정
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("An error occurred: \(error)")
-                    self.showErrorAlert(error: error)
-                }
-            }
-        }
-    }
-    
-    
-        
-    
-    func showErrorAlert(error: Error) {
-        let alert = UIAlertController(title: "Error", message: "Failed to load movie data: \(error.localizedDescription)", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
     }
     
     
@@ -297,4 +288,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             person.bottomAnchor.constraint(equalTo: myimage.bottomAnchor, constant: -5) // myimage의 하단에 맞춤
         ])
     }
+    
+    
 }
