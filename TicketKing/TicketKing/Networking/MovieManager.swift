@@ -38,19 +38,17 @@ class MovieManager {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "accept")
-        request.addValue(apiKey, forHTTPHeaderField: "Authorization")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.requestError
+        }
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            if let httpResponse = response as? HTTPURLResponse {
-                print("HTTP Status: \(httpResponse.statusCode)")
-            }
-            guard let decodedResponse = try? JSONDecoder().decode(Movie.self, from: data) else {
-                throw APIError.decodingError
-            }
+            let decodedResponse = try JSONDecoder().decode(Movie.self, from: data)
             return decodedResponse
         } catch {
-            throw error
+            throw APIError.decodingError
         }
     }
     
@@ -75,20 +73,34 @@ extension MovieManager {
     // 영화 상세정보
     func fetchMovieDetails(for movieId: Int, language: String = "ko-KR") async throws -> MovieDetails {
         let endpoint = "movie/\(movieId)"
-        guard let url = URL(string: "\(baseURL)\(endpoint)?api_key=\(apiKey)&language=\(language)") else {
+        guard var components = URLComponents(string: "\(baseURL)\(endpoint)") else {
             throw APIError.badURL
         }
-        
+
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: language)
+        ]
+
+        guard let url = components.url else {
+            throw APIError.badURL
+        }
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        
-        guard let decodedResponse = try? JSONDecoder().decode(MovieDetails.self, from: data) else {
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.requestError
+        }
+
+        do {
+            let decodedResponse = try JSONDecoder().decode(MovieDetails.self, from: data)
+            return decodedResponse
+        } catch {
             throw APIError.decodingError
         }
-        return decodedResponse
     }
     
     // 영화 출연진 및 제작진 정보 가져오기

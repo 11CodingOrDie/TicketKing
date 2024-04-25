@@ -17,7 +17,7 @@ class CardViewController: UIViewController, UICollectionViewDataSource, UICollec
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+//        self.view.backgroundColor = .white
         setupCollectionView()
         setupSecondCollectionView() // 두 번째 컬렉션 뷰 설정
         fetchPopularMovies()
