@@ -17,7 +17,7 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+//        self.view.backgroundColor = .white
         setupTableView()
         setupCollectionView()
         fetchNowPlayingMovies()

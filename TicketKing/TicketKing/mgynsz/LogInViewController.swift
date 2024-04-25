@@ -55,6 +55,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
+        textField.isSecureTextEntry = true
         
         // 이미지 뷰 생성 및 설정
         let imageView = UIImageView(image: UIImage(systemName: "lock"))
@@ -84,27 +85,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-    private lazy var stayLoggedInView: UIStackView = {
-        let checkBox = UIButton(type: .custom)
-        checkBox.setImage(UIImage(systemName: "square"), for: .normal)
-        checkBox.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
-        checkBox.tintColor = .gray
-        checkBox.addTarget(self, action: #selector(toggleCheckbox), for: .touchUpInside)
-        
-        let label = UILabel()
-        label.text = "로그인 상태 유지"
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .gray
-        
-        let stackView = UIStackView(arrangedSubviews: [checkBox, label])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return stackView
-    }()
-    
     private let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("회원가입", for: .normal)
@@ -129,6 +109,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @objc private func toggleCheckbox(_ sender: UIButton) {
         sender.isSelected.toggle()
         UserDefaults.standard.set(sender.isSelected, forKey: "isUserLoggedIn")
+        NotificationCenter.default.post(name: .didChangeLoginStatus, object: nil)
     }
     
     @objc func dismissKeyboard() {
@@ -168,7 +149,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(userIDTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
-        view.addSubview(stayLoggedInView)
+//        view.addSubview(stayLoggedInView)
         view.addSubview(signUpButton)
         
         logoImageView.snp.makeConstraints { make in
@@ -178,9 +159,14 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             make.height.equalTo(43.3)
         }
         
+        signUpButton.snp.makeConstraints { make in
+            make.top.equalTo(logoImageView.snp.bottom).offset(100)
+            make.right.equalTo(view).inset(20)
+        }
+        
         userIDTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(100)
+            make.top.equalTo(signUpButton.snp.bottom).offset(16)
             make.left.right.equalTo(view).inset(16)
             make.height.equalTo(50)
         }
@@ -198,49 +184,50 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             make.left.right.equalTo(view).inset(16)
             make.height.equalTo(50)
         }
-        
-        signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(loginButton.snp.bottom).offset(19)
-            make.right.equalTo(view).inset(16)
-        }
-        
-        stayLoggedInView.snp.makeConstraints { make in
-            make.top.equalTo(loginButton.snp.bottom).offset(24)
-            make.left.equalTo(view).inset(16)
-        }
     }
     
     @objc private func loginButtonTapped() {
-        guard let username = userIDTextField.text, !username.isEmpty,
+        guard let userID = userIDTextField.text, !userID.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             print("Username or password cannot be empty")
+            // 여기서 사용자에게 UI 피드백을 주는 것이 좋습니다, 예: 오류 메시지 표시
             return
         }
-        
-        if let user = UserManager.shared.getUser(username: username), user.password == password {
+
+        if let user = UserManager.shared.loadUser(userID: userID), user.password == password {
             print("Login successful")
             UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.set(userID, forKey: "currentUserID") // 사용자 ID 저장
             proceedToMainInterface()
         } else {
             print("Invalid username or password")
             UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+            // 로그인 실패 시 사용자에게 알림 표시 등의 UI 업데이트를 여기에 추가
         }
     }
+
     private func proceedToMainInterface() {
-        let mainViewController = ViewController()
-        mainViewController.modalPresentationStyle = .fullScreen
-        present(mainViewController, animated: true)
+        // 로그인 성공 후 메인 인터페이스로 전환하는 로직
+        if let mainVC = storyboard?.instantiateViewController(identifier: "MainViewController") as? MainViewController {
+            mainVC.modalPresentationStyle = .fullScreen
+            present(mainVC, animated: true, completion: nil)
+        }
     }
 
     @objc private func signUpButtonTapped() {
         let signUpVC = SignUpViewController()
-        if let navigationController = self.navigationController {
-            navigationController.pushViewController(signUpVC, animated: true)
-        } else {
-            let navController = UINavigationController(rootViewController: signUpVC)
-            navController.modalPresentationStyle = .fullScreen
-            self.present(navController, animated: true)
-        }
+        let navController = UINavigationController(rootViewController: signUpVC)
+        
+        // 모달 뷰에 '닫기' 버튼 추가
+        signUpVC.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(dismissModal))
+        
+        // 모달 뷰 전체 화면으로 설정
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true)
+    }
+    
+    @objc func dismissModal() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     private func validateLogin() -> Bool {

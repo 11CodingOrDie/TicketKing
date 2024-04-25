@@ -8,12 +8,10 @@
 import UIKit
 import SnapKit
 
-class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class SignUpViewController: UIViewController, UIPickerViewDelegate {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
         return scrollView
     }()
     
@@ -24,11 +22,15 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     
     private let passwordTextField: LabeledTextField = {
         let textField = LabeledTextField(title: "비밀번호", placeholder: "비밀번호", instructionText: "영문, 대·소문자, 숫자, 특수문자(8~16 자)")
+        textField.textField.textContentType = nil // 자동 완성 기능 비활성화
+        textField.textField.isSecureTextEntry = true // 텍스트 숨기기 활성화
         return textField
     }()
     
     private let passwordConfirmTextField: LabeledTextField = {
         let textField = LabeledTextField(title: "비밀번호 확인", placeholder: "비밀번호 확인", instructionText: "비밀번호를 올바르게 입력하세요.")
+        textField.textField.textContentType = nil // 자동 완성 기능 비활성화
+        textField.textField.isSecureTextEntry = true // 텍스트 숨기기 활성화
         return textField
     }()
     
@@ -40,17 +42,6 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     private let emailTextField: LabeledTextField = {
         let textField = LabeledTextField(title: "이메일", placeholder: "example@gmail.com", instructionText: "이메일 형식에 맞게 입력바랍니다.")
         return textField
-    }()
-    
-    private let birthdatePicker: UIDatePicker = {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        return picker
-    }()
-    
-    private let genderPicker: UIPickerView = {
-        let picker = UIPickerView()
-        return picker
     }()
     
     private let signUpButton: UIButton = {
@@ -65,14 +56,12 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         return button
     }()
     
-    let genders = ["남성", "여성", "비밀"]
-    
     private let contentView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        print("Is inside a navigation controller: \(navigationController != nil)")
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         view.addSubview(signUpButton)
@@ -82,13 +71,10 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         setupLayout()
         setupNavigation()
         
-        genderPicker.delegate = self
-        genderPicker.dataSource = self
-        
         signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-//        tapGesture.cancelsTouchesInView = false
+        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
     private func setupNavigation() {
@@ -102,19 +88,11 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     @objc func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return genders.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return genders[row]
     }
     
     private func setupScrollView() {
@@ -149,8 +127,6 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         contentView.addSubview(passwordConfirmTextField)
         contentView.addSubview(nameTextField)
         contentView.addSubview(emailTextField)
-        contentView.addSubview(birthdatePicker)
-        contentView.addSubview(genderPicker)
         
         userIDTextField.snp.makeConstraints { make in
             make.centerX.equalTo(contentView)
@@ -185,20 +161,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
             make.top.equalTo(nameTextField.snp.bottom).offset(48)
             make.left.right.equalTo(contentView).inset(16)
             make.height.equalTo(50)
-        }
-        
-        birthdatePicker.snp.makeConstraints { make in
-            make.centerX.equalTo(contentView)
-            make.top.equalTo(emailTextField.snp.bottom).offset(48)
-            make.left.right.equalTo(contentView).inset(16)
-            make.height.equalTo(50)
-        }
-        
-        genderPicker.snp.makeConstraints { make in
-            make.centerX.equalTo(contentView)
-            make.top.equalTo(birthdatePicker.snp.bottom).offset(48)
-            make.left.right.equalTo(contentView).inset(16)
-            make.height.equalTo(50)
+            make.bottom.equalTo(contentView)
         }
     }
     
@@ -249,7 +212,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         
         // 회원가입 후 메인 화면으로 전환
         if let navigationController = navigationController {
-            let mainViewController = ViewController()
+            let mainViewController = ProfileViewController()
             navigationController.pushViewController(mainViewController, animated: true)
         } else {
             dismiss(animated: true, completion: nil)
@@ -257,9 +220,17 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     private func isValidPassword(_ password: String) -> Bool {
-        let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$"
+        let passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,16}$"
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
     }
+    /* : 비밀번호 정규 표현식
+        * '^' : 문자열 시작
+        * (?=.*[a-z]) : 한 개 이상의 소문자 필요
+        * (?=.*[A-Z]): 한 개 이상의 대문자 필요
+        * (?=.*\d): 한 개 이상의 숫자
+        * (?=.*[@$!%*?&]) : 특수 문자 한 개 이상 필요
+        * [A-Za-z\d]{8,16}: 총 길이가 8자 이상 16자 이하, 영문자와 숫자만 포함할 수 있음
+     */
     
     // 키보드가 나타날 때 호출 메서드
     @objc private func keyboardWillShow(notification: Notification) {
@@ -272,6 +243,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         
         // 스크롤뷰의 콘텐츠를 키보드 높이만큼 조정
         scrollView.contentInset.bottom = keyboardHeight
+        
     }
 
     // 키보드가 사라질 때 호출 메서드

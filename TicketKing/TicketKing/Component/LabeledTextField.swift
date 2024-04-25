@@ -11,13 +11,14 @@ import SnapKit
 class LabeledTextField: UIView, UITextFieldDelegate {
     
     private let label = UILabel()
-    private let textField = UITextField()
+    var textField = UITextField()
     var instructionLabel = UILabel()
 
     init(title: String, placeholder: String, instructionText: String) {
         super.init(frame: .zero)
         setupViews(title: title, placeholder: placeholder, instructionText: instructionText)
         textField.delegate = self
+        textField.textContentType = nil
     }
 
     required init?(coder: NSCoder) {
