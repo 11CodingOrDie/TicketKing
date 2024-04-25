@@ -11,7 +11,7 @@ import SnapKit
 
 class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var movies: [MovieModel] = []
+    var nowPlayingMovies: [MovieModel] = []
     var tableView: UITableView!
     var collectionView: UICollectionView!
 
@@ -20,7 +20,7 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.view.backgroundColor = .white
         setupTableView()
         setupCollectionView()
-        fetchData()
+        fetchNowPlayingMovies()
     }
     
     // TableView 설정
@@ -56,32 +56,32 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     // 영화 데이터 가져오기
-    private func fetchData() {
+    private func fetchNowPlayingMovies(language: String = "ko-KR", page: Int = 1) {
         Task {
             await GenreManager.shared.loadGenresAsync()
             do {
-                let movieResponse = try await MovieManager.shared.fetchMovies(endpoint: "now_playing")
-                self.movies = movieResponse.results
+                let nowPlayingMovies = try await MovieManager.shared.fetchNowPlayingMovies(page: page, language: language)
+                self.nowPlayingMovies = nowPlayingMovies
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                     self.collectionView.reloadData()
                 }
             } catch {
-                print("Error fetching movies: \(error)")
+                print("Error fetching popular movies: \(error)")
             }
         }
     }
     
     // TableView DataSource 및 Delegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
+        return nowPlayingMovies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MovieInfoTableViewCell", for: indexPath) as? MovieInfoTableViewCell else {
             fatalError("Unable to dequeue MovieInfoTableViewCell")
         }
-        cell.configure(with: movies[indexPath.row])
+        cell.configure(with: nowPlayingMovies[indexPath.row])
         return cell
     }
     
@@ -91,14 +91,14 @@ class MovieViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     // CollectionView DataSource 및 Delegate
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
+        return nowPlayingMovies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieInfoCollectionViewCell", for: indexPath) as? MovieInfoCollectionViewCell else {
             fatalError("Unable to dequeue MovieInfoCollectionViewCell")
         }
-        cell.configure(with: movies[indexPath.row])
+        cell.configure(with: nowPlayingMovies[indexPath.row])
         return cell
     }
     
