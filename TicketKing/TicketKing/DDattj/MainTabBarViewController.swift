@@ -43,8 +43,6 @@ class MainTabBarViewController: UITabBarController {
         nav.tabBarItem.title = title
         nav.tabBarItem.image = image
         
-        
-        
         return nav
     }
 }

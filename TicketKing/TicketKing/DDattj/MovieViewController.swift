@@ -38,13 +38,13 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
         //세그먼트 타이틀
         segment.insertSegment(withTitle: "현재상영작", at: 0, animated: true)
         segment.insertSegment(withTitle: "상영예정작", at: 1, animated: true)
-        segment.addTarget(self, action: #selector(changeUnderLinePosition), for: .valueChanged)
+        segment.addTarget(MovieViewController.self, action: #selector(changeUnderLinePosition), for: .valueChanged)
         return segment
     }()
     
     var underLineView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .kRed
         return view
     }()
     
@@ -153,36 +153,35 @@ class MovieViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func segMovieAutoLayout() {
-        self.addSubView(segMovies)
-        self.addSubView(underLineView)
-        
-        segMovies.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
-        underLineView.snp.makeConstraints {
-            $0.top.equalTo(segMovies.snp.bottom)
-            $0.height.equalTo(2)
-            $0.leading.equalTo(segMovies)
-            $0.width.equalTo(segMovies.snp.width).dividedBy(segMovies.numberOfSegments)
-        }
-    }
-    
-    @objc private func changeUnderLinePosition() {
+        view.addSubview(segMovies)
+           view.addSubview(underLineView)
+           
+           segMovies.translatesAutoresizingMaskIntoConstraints = false
+           NSLayoutConstraint.activate([
+               segMovies.topAnchor.constraint(equalTo: view.topAnchor, constant: 186),
+               segMovies.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+               segMovies.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+               segMovies.heightAnchor.constraint(equalToConstant: 42)
+           ])
+           
+           underLineView.translatesAutoresizingMaskIntoConstraints = false
+           NSLayoutConstraint.activate([
+               underLineView.topAnchor.constraint(equalTo: segMovies.bottomAnchor),
+               underLineView.heightAnchor.constraint(equalToConstant: 3),
+               underLineView.widthAnchor.constraint(equalTo: segMovies.widthAnchor, multiplier: 1 / CGFloat(segMovies.numberOfSegments)),
+               underLineView.leadingAnchor.constraint(equalTo: segMovies.leadingAnchor)
+           ])
+       }
+
+       @objc private func changeUnderLinePosition() {
            let segmentIndex = CGFloat(segMovies.selectedSegmentIndex)
            let segmentWidth = segMovies.frame.width / CGFloat(segMovies.numberOfSegments)
            let leadingDistance = segmentWidth * segmentIndex
 
-   // 아래는 0.3초의 시간 동안 view의 애니메이션을 주면서 밑줄의 constraints를 업데이트 해준다
-           UIView.animate(withDuration: 0.3, animations: { [weak self] in
-               guard let self = self else {
-                   return
-               }
-
-               self.underLineView.snp.updateConstraints {
-                   $0.leading.equalTo(self.segMovies).inset(leadingDistance)
-               }
-               self.layoutIfNeeded()
-           })
+           UIView.animate(withDuration: 0.3) { [weak self] in
+               guard let self = self else { return }
+               self.underLineView.leadingAnchor.constraint(equalTo: self.segMovies.leadingAnchor, constant: leadingDistance).isActive = true
+               self.view.layoutIfNeeded()
+           }
        }
 }

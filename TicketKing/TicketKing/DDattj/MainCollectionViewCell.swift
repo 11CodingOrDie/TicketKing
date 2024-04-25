@@ -12,21 +12,21 @@ class MainCollectionViewCell: UICollectionViewCell {
     //cell 식별자명 지정
     static let identifier = "MainCollectionViewCell"
     
-    private let releasedMoviePoster: UIImageView = {
+    let releasedMoviePoster: UIImageView = {
         var imageview = UIImageView()
         imageview.layer.cornerRadius = 10
         imageview.backgroundColor = .gray
         return imageview
     }()
     
-    private let releasedMovieTitle: UILabel = {
+    let releasedMovieTitle: UILabel = {
         var title = UILabel()
         title.text = "제목"
         title.font = UIFont.systemFont(ofSize: 16)
         return title
     }()
     
-    private let releasedMovieGenre: UILabel = {
+    let releasedMovieGenre: UILabel = {
         var genre = UILabel()
         genre.text = "장르"
         genre.font = UIFont.systemFont(ofSize: 15)

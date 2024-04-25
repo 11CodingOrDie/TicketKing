@@ -10,7 +10,7 @@ import UIKit
 
 class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource{
     
-    var movies: [MovieModel] = []
+    private var movies: [MovieModel] = [] //가져올 정보가 담긴 파일의 이름과 형식 설정
     var releasedMovieView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 24 // 행 사이 최소간격
@@ -97,6 +97,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         view.addSubview(seeAllMovies)
         view.addSubview(seeUpComingMovies)
         autoLayout()
+        
+        fetchMovieData()
     }
     
     
@@ -121,11 +123,28 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     //컬렉션뷰 cell은 어떤 모양으로
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard !movies.isEmpty else {
+            fatalError("Movies array is empty")
+        }
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
             fatalError("error")
         }
+        //정보 사용처에서 구체적으로 어떻게 사용할것인가 = 컬렉션뷰 내부의 포스터칸에서
+        let movie = movies[indexPath.item]
+        cell.releasedMoviePoster.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)"), placeholderImage: UIImage(named: "placeholder"))
+        //컬렉션뷰 내부의 영화제목칸에서
+        let title = movies[indexPath.item]
+        cell.releasedMovieTitle.text = movie.title
+        //컬렉션뷰 내부의 영화장르칸에서
+        let genre = movies[indexPath.item]
+        let movieGenreIds = movie.genreIDS
+        let genreNames = GenreManager.shared.genreNames(from: movieGenreIds)
+        cell.releasedMovieGenre.text = genreNames
+        
         return cell
     }
+    
     //셀 사이즈 지정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 221, height: 279)
@@ -156,6 +175,40 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 88 // 원하는 높이를 리턴합니다.
+    }
+    
+    
+    
+    
+    
+    //데이터 불러오기, 지정된 형식에 맞춰 불러올 정보 작성
+    private func fetchMovieData() {
+        Task {
+            await GenreManager.shared.loadGenresAsync()
+            do {
+                let movieData = try await MovieManager.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR") //랭킹순을 한국어로 가져오겠다
+                DispatchQueue.main.async {
+                    self.movies = movieData.results
+                     //정보 사용할곳 지정
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    print("An error occurred: \(error)")
+                    self.showErrorAlert(error: error)
+                }
+            }
+        }
+    }
+    
+    
+        
+    
+    func showErrorAlert(error: Error) {
+        let alert = UIAlertController(title: "Error", message: "Failed to load movie data: \(error.localizedDescription)", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     
