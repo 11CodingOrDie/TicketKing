@@ -54,9 +54,9 @@ class MainTableViewCell: UITableViewCell {
     
     private func setUI() {
         self.addSubview(ComingUpMoviePoster)
-        self.addSubview(ComingUpMovieTitle)
-        self.addSubview(ComingUpMovieGenre)
-        self.addSubview(ComingUpMovieDirector)
+        ComingUpMoviePoster.addSubview(ComingUpMovieTitle)
+        ComingUpMoviePoster.addSubview(ComingUpMovieGenre)
+        ComingUpMoviePoster.addSubview(ComingUpMovieDirector)
         
     }
     
@@ -68,10 +68,32 @@ class MainTableViewCell: UITableViewCell {
     private func configurereleasedMovieViewConstaint() {
         ComingUpMoviePoster.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            ComingUpMoviePoster.topAnchor.constraint(equalTo: self.topAnchor),
-            ComingUpMoviePoster.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            ComingUpMoviePoster.widthAnchor.constraint(equalTo: self.widthAnchor),
-            ComingUpMoviePoster.heightAnchor.constraint(equalToConstant: 279)
+            ComingUpMoviePoster.topAnchor.constraint(equalTo: self.topAnchor, constant: 9),
+            ComingUpMoviePoster.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 11),
+            ComingUpMoviePoster.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -258),
+            ComingUpMoviePoster.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -9)
+        ])
+        
+        ComingUpMovieTitle.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            ComingUpMovieTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 17), // myimage의 상단에 맞춤
+            ComingUpMovieTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 100), // myimage의 왼쪽에 맞추고 간격 추가
+            ComingUpMovieTitle.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -175), // myimage의 오른쪽에 맞추고 간격 추가
+            ComingUpMovieTitle.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -49) // myimage의 하단에 맞춤
+        ])
+        
+        ComingUpMovieGenre.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            ComingUpMovieGenre.topAnchor.constraint(equalTo: self.topAnchor, constant: 48), // myimage의 상단에 맞춤
+            ComingUpMovieGenre.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 100), // myimage의 왼쪽에 맞추고 간격 추가
+            ComingUpMovieGenre.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -18) // myimage의 하단에 맞춤
+        ])
+        
+        ComingUpMovieDirector.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            ComingUpMovieDirector.topAnchor.constraint(equalTo: self.topAnchor, constant: 48), // myimage의 상단에 맞춤
+            ComingUpMovieDirector.leadingAnchor.constraint(equalTo: ComingUpMovieGenre.leadingAnchor, constant: 31), // myimage의 왼쪽에 맞추고 간격 추가
+            ComingUpMovieDirector.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -18) // myimage의 하단에 맞춤
         ])
     }
 }

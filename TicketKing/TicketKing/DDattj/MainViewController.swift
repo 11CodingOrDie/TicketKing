@@ -8,15 +8,13 @@
 import Foundation
 import UIKit
 
-class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource {
+class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource{
     
     var movies: [MovieModel] = []
     var releasedMovieView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 24 // 행 사이 최소간격
-        layout.scrollDirection = .horizontal // 스크롤 방향 지정
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // 섹션 여백 지정
-        
+        layout.scrollDirection = .horizontal // 스크롤 방향을 수평으로 변경
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout) // 크기 0인 프레임 사용
         return cv
     }()
@@ -87,6 +85,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         tableView()
         collectionView()
         configurereleasedMovieViewConstaint()
+        configureComingUpMovieViewConstaint()
         
         view.addSubview(brandLogo)
         view.addSubview(profileImage.0)
@@ -135,8 +134,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
-    //테이블뷰 설정
+    // 테이블뷰 설정
     func tableView() {
+        comingUpMovieView.rowHeight = UITableView.automaticDimension
+        comingUpMovieView.estimatedRowHeight = 88 //셀의 높이
         comingUpMovieView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
         comingUpMovieView.dataSource = self
         comingUpMovieView.delegate = self
@@ -144,7 +145,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     //테이블뷰 몇줄
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     //테이블뷰 모양
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -152,6 +153,9 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             fatalError("error")
         }
         return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 88 // 원하는 높이를 리턴합니다.
     }
     
     
@@ -161,10 +165,21 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func configurereleasedMovieViewConstaint() {
         releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 186), // 원하는 Y 좌표로 설정
-            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            releasedMovieView.heightAnchor.constraint(equalToConstant: 356) // 원하는 높이로 설정
+            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 140), // 원하는 Y 좌표로 설정
+            releasedMovieView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            releasedMovieView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            releasedMovieView.heightAnchor.constraint(equalToConstant: 400) // 원하는 높이로 설정
+        ])
+    }
+    
+    //테이블뷰 오토레이아웃
+    func configureComingUpMovieViewConstaint() {
+        comingUpMovieView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            comingUpMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 615), // 원하는 Y 좌표로 설정
+            comingUpMovieView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            comingUpMovieView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            comingUpMovieView.heightAnchor.constraint(equalToConstant: 145) // 화면에 보여질 높이 설정
         ])
     }
     
@@ -228,7 +243,5 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             person.trailingAnchor.constraint(equalTo: myimage.trailingAnchor, constant: -5), // myimage의 오른쪽에 맞추고 간격 추가
             person.bottomAnchor.constraint(equalTo: myimage.bottomAnchor, constant: -5) // myimage의 하단에 맞춤
         ])
-        
-        
     }
 }

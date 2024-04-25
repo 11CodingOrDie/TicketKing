@@ -68,13 +68,13 @@ class MainCollectionViewCell: UICollectionViewCell {
         releasedMovieTitle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             releasedMovieTitle.centerXAnchor.constraint(equalTo: releasedMoviePoster.centerXAnchor), // releasedMovieView의 중앙과 정렬
-            releasedMovieTitle.centerYAnchor.constraint(equalTo: releasedMoviePoster.centerYAnchor, constant: 482) // releasedMovieView의 세로 중앙과 정렬
+            releasedMovieTitle.bottomAnchor.constraint(equalTo: releasedMoviePoster.bottomAnchor, constant: 30) // releasedMovieView의 세로 중앙과 정렬
         ])
         
         releasedMovieGenre.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             releasedMovieGenre.centerXAnchor.constraint(equalTo: releasedMoviePoster.centerXAnchor), // releasedMovieView의 중앙과 정렬
-            releasedMovieGenre.centerYAnchor.constraint(equalTo: releasedMoviePoster.centerYAnchor, constant: 509), // releasedMovieView의 세로 중앙과 정렬
+            releasedMovieGenre.bottomAnchor.constraint(equalTo: releasedMoviePoster.bottomAnchor, constant: 50), // releasedMovieView의 세로 중앙과 정렬
         ])
     }
 }
