@@ -211,12 +211,14 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
         print("User registered successfully")
         
         // 회원가입 후 메인 화면으로 전환
-        if let navigationController = navigationController {
-            let mainViewController = ProfileViewController()
-            navigationController.pushViewController(mainViewController, animated: true)
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        let mainVC = MainViewController()
+            if let navigationController = self.navigationController {
+                navigationController.setViewControllers([mainVC], animated: true)
+            } else {
+                let navController = UINavigationController(rootViewController: mainVC)
+                navController.modalPresentationStyle = .fullScreen
+                self.present(navController, animated: true, completion: nil)
+            }
     }
     
     private func isValidPassword(_ password: String) -> Bool {
@@ -262,6 +264,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
     // 뷰가 사라질 때 키보드 관련 알림을 제거합니다.
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
         view.endEditing(true)

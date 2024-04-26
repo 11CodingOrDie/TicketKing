@@ -198,21 +198,31 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             print("Login successful")
             UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
             UserDefaults.standard.set(userID, forKey: "currentUserID") // 사용자 ID 저장
-            proceedToMainInterface()
+//            proceedToMainInterface()
         } else {
             print("Invalid username or password")
             UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
             // 로그인 실패 시 사용자에게 알림 표시 등의 UI 업데이트를 여기에 추가
         }
-    }
-
-    private func proceedToMainInterface() {
-        // 로그인 성공 후 메인 인터페이스로 전환하는 로직
-        if let mainVC = storyboard?.instantiateViewController(identifier: "MainViewController") as? MainViewController {
-            mainVC.modalPresentationStyle = .fullScreen
-            present(mainVC, animated: true, completion: nil)
+        
+        // 회원가입 후 메인 화면으로 전환
+        if let navigationController = navigationController {
+            let mainViewController = MainViewController()
+            navigationController.pushViewController(mainViewController, animated: true)
+        } else {
+            dismiss(animated: true, completion: nil)
         }
     }
+
+//    private func proceedToMainInterface() {
+//        // 회원가입 후 메인 화면으로 전환
+//        if let navigationController = navigationController {
+//            let mainViewController = MainViewController()
+//            navigationController.pushViewController(mainViewController, animated: true)
+//        } else {
+//            dismiss(animated: true, completion: nil)
+//        }
+//    }
 
     @objc private func signUpButtonTapped() {
         let signUpVC = SignUpViewController()

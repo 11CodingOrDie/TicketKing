@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class MovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ExMovieViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     var nowPlayingMovies: [MovieModel] = []
     var tableView: UITableView!
