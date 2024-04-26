@@ -38,15 +38,28 @@ class BuyTicketPageViewController: UIViewController {
     lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, discountStackView, separateLineView2, totalPriceStackView])
     
     let payByLabel = UILabel()
-    
     let payButton = UIButton()
     
+    var paymentMethodCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
+        layout.sectionInset = .zero
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return cv
+    }()
+    let images = ["bc", "citi", "hyundai", "kb", "lotte", "nh", "samsung", "sc", "uri"]
+//    let images: [UIImage] = [UIImage(resource: .bc), UIImage(resource: .citi), UIImage(resource: .hyundai), UIImage(resource: .kb), UIImage(resource: .kb), UIImage(resource: .lotte), UIImage(resource: .nh), UIImage(resource: .samsung), UIImage(resource: .sc), UIImage(resource: .uri)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupConstraints()
         configureUI()
+        
+        paymentMethodCollectionView.delegate = self
+        paymentMethodCollectionView.dataSource = self
         
     }
     
@@ -58,6 +71,7 @@ class BuyTicketPageViewController: UIViewController {
         payingView.addSubview(bookingInfoStackView)
         payingView.addSubview(payByLabel)
         payingView.addSubview(payButton)
+        payingView.addSubview(paymentMethodCollectionView)
        
         posterImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
@@ -105,13 +119,19 @@ class BuyTicketPageViewController: UIViewController {
             make.leading.equalToSuperview().offset(27)
         }
         
+        paymentMethodCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(payByLabel.snp.bottom).offset(13)
+            make.bottom.equalTo(payButton.snp.top).offset(-13)
+            make.width.equalTo(346)
+            make.centerX.equalToSuperview()
+        }
+        
         payButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-65)
             make.height.equalTo(58)
             make.width.equalTo(344)
         }
-        
     }
     
     func configureUI() {
@@ -192,10 +212,36 @@ class BuyTicketPageViewController: UIViewController {
         payByLabel.textColor = .black
         payByLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         
+        paymentMethodCollectionView.backgroundColor = .white
+        paymentMethodCollectionView.layer.cornerRadius = 5
+        paymentMethodCollectionView.register(PaymentMethodCollectionViewCell.self, forCellWithReuseIdentifier: PaymentMethodCollectionViewCell.identifier)
+        
         payButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1)
         payButton.setTitle("결제하기", for: .normal)
         payButton.layer.cornerRadius = 5
         
+    }
+}
+
+extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = paymentMethodCollectionView.dequeueReusableCell(withReuseIdentifier: PaymentMethodCollectionViewCell.identifier, for: indexPath) as? PaymentMethodCollectionViewCell else { return UICollectionViewCell() }
+        
+        // 이미지 설정
+//        guard let image = UIImage(named: images[indexPath.item]) else { return UICollectionViewCell() }
+        let image = UIImage(named: images[indexPath.item])
+        cell.setImage(image: image!)
+        
+        // 버튼에 액션 추가
+        cell.buttonAction = {
+            print("Button tapped at indexPath: \(indexPath)")
+        }
+        
+        return cell
     }
     
 }
