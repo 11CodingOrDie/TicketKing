@@ -10,7 +10,9 @@ import UIKit
 
 class MainViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDelegate, UITableViewDataSource{
     
-    private var movies: [MovieModel] = [] //가져올 정보가 담긴 파일의 이름과 형식 설정
+    var popularMovies: [MovieModel] = [] //가져올 정보가 담긴 파일의 이름과 형식 설정
+    var upcomingMovies: [MovieModel] = []
+    
     var releasedMovieView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 24 // 행 사이 최소간격
@@ -22,7 +24,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let tableView = UITableView()
         return tableView
     }()
-    var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
+//    var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
     
     
     
@@ -85,7 +87,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         tableView()
         collectionView()
-        fetchMovieData()
+        fetchPopularMovies()
+        fetchUpcomingMovies()
         addMoviesToCollectionView()
         configurereleasedMovieViewConstaint()
         configureComingUpMovieViewConstaint()
@@ -104,24 +107,38 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
-    
-    //데이터 불러오기, 지정된 형식에 맞춰 불러올 정보 작성
-    private func fetchMovieData() {
+    //인기 영화 데이터 가져오기
+    private func fetchPopularMovies(language: String = "ko-KR", page: Int = 1) {
         Task {
             await GenreManager.shared.loadGenresAsync()
             do {
-                let movieData = try await MovieManager.shared.fetchMovies(endpoint: "top_rated", page: 1, language: "ko-KR") //랭킹순을 한국어로 가져오겠다
+                let popularMovies = try await MovieManager.shared.fetchPopularMovies(page: page, language: language)
+                self.popularMovies = popularMovies
                 DispatchQueue.main.async {
-                    self.movies = movieData.results //가져온 정보 movies에 저장
-                    self.addMoviesToCollectionView() //movies에 저장된 정보 처리기관 설정
+                    self.releasedMovieView.reloadData()
                 }
             } catch {
-                DispatchQueue.main.async {
-                    print("An error occurred: \(error)")
-                }
+                print("Error fetching popular movies: \(error)")
             }
         }
     }
+    
+    //개봉 얘정작 데이터 가져오기
+    private func fetchUpcomingMovies(language: String = "ko-KR", page: Int = 1) {
+        Task {
+            await GenreManager.shared.loadGenresAsync()
+            do {
+                let upcomingMovies = try await MovieManager.shared.fetchUpcomingMovies(page: page, language: language)
+                self.upcomingMovies = upcomingMovies
+                DispatchQueue.main.async {
+                    self.comingUpMovieView.reloadData()
+                }
+            } catch {
+                print("Error fetching popular movies: \(error)")
+            }
+        }
+    }
+    
     private func addMoviesToCollectionView() {
         releasedMovieView.reloadData()
     } //지정한 컬렉션뷰로 데이터 이동
@@ -143,36 +160,32 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
 
     //컬렉션뷰 한 줄에 몇개
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return popularMovies.count
     }
     
-    //컬렉션뷰 cell은 어떤 모양으로
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard !movies.isEmpty else {
-            fatalError("Movies array is empty")
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
+            fatalError("Unable to dequeue MovieCardCollectionViewCell")
         }
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
-            fatalError("error")
+        if collectionView === self.releasedMovieView {
+            cell.configure(with: popularMovies[indexPath.row], mode: .collectionCard)
         }
-        //정보 사용처에서 구체적으로 어떻게 사용할것인가 = 컬렉션뷰 내부의 포스터칸에서
-        let movie = movies[indexPath.item]
-        cell.releasedMoviePoster.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)"), placeholderImage: UIImage(named: "placeholder"))
-        //컬렉션뷰 내부의 영화제목칸에서
-        let title = movies[indexPath.item]
-        cell.releasedMovieTitle.text = movie.title
-        //컬렉션뷰 내부의 영화장르칸에서
-        let genre = movies[indexPath.item]
-        let movieGenreIds = movie.genreIDS
-        let genreNames = GenreManager.shared.genreNames(from: movieGenreIds)
-        cell.releasedMovieGenre.text = genreNames
         
         return cell
     }
+
+
     
     //셀 사이즈 지정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 221, height: 279)
+        if collectionView === self.releasedMovieView {
+            return CGSize(width: 220, height: 280)  // 첫 번째 컬렉션뷰의 셀 크기
+        } else {
+            let padding: CGFloat = 10
+            let collectionViewSize = collectionView.frame.size.width - padding * 4
+            return CGSize(width: collectionViewSize / 3, height: collectionViewSize / 3)  // 두 번째 컬렉션뷰의 셀 크기
+        }
     }
     
     
@@ -182,24 +195,26 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func tableView() {
         comingUpMovieView.rowHeight = UITableView.automaticDimension
         comingUpMovieView.estimatedRowHeight = 88 //셀의 높이
-        comingUpMovieView.register(MainTableViewCell.self, forCellReuseIdentifier: MainTableViewCell.identifier)
+        comingUpMovieView.register(MainTableViewCell.self, forCellReuseIdentifier: "MainTableViewCell")
         comingUpMovieView.dataSource = self
         comingUpMovieView.delegate = self
         view.addSubview(comingUpMovieView)
     }
     //테이블뷰 몇줄
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return upcomingMovies.count
     }
     //테이블뷰 모양
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MainTableViewCell.identifier, for: indexPath) as? MainTableViewCell else {
-            fatalError("error")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MainTableViewCell", for: indexPath) as? MainTableViewCell else {
+            fatalError("Unable to dequeue MovieInfoTableViewCell")
         }
+        cell.configure(with: upcomingMovies[indexPath.row])
         return cell
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 88 // 원하는 높이를 리턴합니다.
+        return 100 // 원하는 높이를 리턴합니다.
     }
     
     
@@ -221,8 +236,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         comingUpMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             comingUpMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 615), // 원하는 Y 좌표로 설정
-            comingUpMovieView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
-            comingUpMovieView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            comingUpMovieView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            comingUpMovieView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             comingUpMovieView.heightAnchor.constraint(equalToConstant: 145) // 화면에 보여질 높이 설정
         ])
     }

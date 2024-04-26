@@ -34,17 +34,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
         
         // 첫 번째 탭
-        let homeVC = ProfileViewController()
-        homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), tag: 0)
-        homeVC.view.backgroundColor = .white
+        let mainVC = MainViewController()
+        mainVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), tag: 0)
+        mainVC.view.backgroundColor = .white
+        tabBarController.viewControllers = [UINavigationController(rootViewController: mainVC)]
         
         // 두 번째 탭
-        let searchVC = CardViewController()
+        let searchVC = ProfileViewController()
         searchVC.view.backgroundColor = .white
         searchVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
         
         // 세 번째 탭
-        let ticketVC = MovieViewController()
+        let ticketVC = ExMovieViewController()
         ticketVC.view.backgroundColor = .white
         ticketVC.tabBarItem = UITabBarItem(title: "Ticket", image: UIImage(systemName: "bell.fill"), tag: 2)
         
@@ -54,7 +55,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "gear"), tag: 3)
         
         // 탭 바 컨트롤러에 뷰 컨트롤러 추가
-        tabBarController.viewControllers = [homeVC, searchVC, ticketVC, profileVC]
+        tabBarController.viewControllers = [mainVC, searchVC, ticketVC, profileVC]
         
         // 탭 바 모양
         let tabBarAppearance = UITabBarAppearance()
