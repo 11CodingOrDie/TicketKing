@@ -21,9 +21,26 @@ class BuyTicketPageViewController: UIViewController {
     
     let bookingNumLabel = UILabel()
     let bookingRamdomNumLabel = UILabel()
-    lazy var bookinNumStackView = UIStackView(arrangedSubviews: [bookingNumLabel, bookingRamdomNumLabel])
+    lazy var bookingNumStackView = UIStackView(arrangedSubviews: [bookingNumLabel, bookingRamdomNumLabel])
     
-    let totalPriceTableView = UITableView()
+
+    let selectedSeatLabel = UILabel()
+    let selectedSeatNumLabel = UILabel()
+    lazy var seletedStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
+    let separateLineView = UIView()
+    let discountLabel = UILabel()
+    let discountPriceLabel = UILabel()
+    lazy var discountStackView = UIStackView(arrangedSubviews: [discountLabel, discountPriceLabel])
+    let separateLineView2 = UIView()
+    let totalPriceLabel = UILabel()
+    let totalPriceWonLabel = UILabel()
+    lazy var totalPriceStackView = UIStackView(arrangedSubviews: [totalPriceLabel, totalPriceWonLabel])
+    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, discountStackView, separateLineView2, totalPriceStackView])
+    
+    let payByLabel = UILabel()
+    
+    let payButton = UIButton()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,9 +54,11 @@ class BuyTicketPageViewController: UIViewController {
         view.addSubview(posterImageView)
         view.addSubview(movieInfoStackView)
         view.addSubview(payingView)
-        payingView.addSubview(bookinNumStackView)
-        payingView.addSubview(totalPriceTableView)
-        
+        payingView.addSubview(bookingNumStackView)
+        payingView.addSubview(bookingInfoStackView)
+        payingView.addSubview(payByLabel)
+        payingView.addSubview(payButton)
+       
         posterImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -57,9 +76,40 @@ class BuyTicketPageViewController: UIViewController {
             make.leading.trailing.bottom.equalToSuperview()
         }
         
-        bookinNumStackView.snp.makeConstraints { make in
+        bookingNumStackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(32)
             make.leading.equalToSuperview().offset(27)
+        }
+        
+    
+        [seletedStackView, discountStackView, totalPriceLabel].forEach { view in
+            view.snp.makeConstraints { make in
+                make.height.equalTo(60)
+            }
+        }
+
+        [separateLineView, separateLineView2].forEach { line in
+            line.snp.makeConstraints { make in
+                make.height.equalTo(1)
+            }
+        }
+        
+        bookingInfoStackView.snp.makeConstraints { make in
+            make.top.equalTo(bookingNumStackView.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(341)
+        }
+        
+        payByLabel.snp.makeConstraints { make in
+            make.top.equalTo(bookingInfoStackView.snp.bottom).offset(38)
+            make.leading.equalToSuperview().offset(27)
+        }
+        
+        payButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.snp.bottom).offset(-65)
+            make.height.equalTo(58)
+            make.width.equalTo(344)
         }
         
     }
@@ -101,12 +151,52 @@ class BuyTicketPageViewController: UIViewController {
         bookingRamdomNumLabel.text = String(Int.random(in: 1...9999999))
         bookingRamdomNumLabel.textColor = .white
         
-        bookinNumStackView.spacing = 8
-        bookinNumStackView.axis = .horizontal
-        bookinNumStackView.distribution = .fillEqually
-        bookinNumStackView.alignment = .fill
+        bookingNumStackView.spacing = 8
+        bookingNumStackView.axis = .horizontal
+        bookingNumStackView.distribution = .fillEqually
+        bookingNumStackView.alignment = .fill
+        
+        selectedSeatLabel.text = "선택 좌석"
+        selectedSeatLabel.textColor = .black
+        selectedSeatLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        selectedSeatNumLabel.text = "0000, 0000"
+        selectedSeatNumLabel.textColor = .black
+        selectedSeatNumLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        seletedStackView.axis = .horizontal
+        
+        separateLineView.backgroundColor = .white
+        
+        discountLabel.text = "할인 적용"
+        discountLabel.textColor = .black
+        discountLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        discountPriceLabel.text = " - 000 원"
+        discountPriceLabel.textColor = .black
+        discountPriceLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        discountStackView.axis = .horizontal
+        
+        separateLineView2.backgroundColor = .white
+        
+        totalPriceLabel.text = "총 금액"
+        totalPriceLabel.textColor = .black
+        totalPriceLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        totalPriceWonLabel.text = "10,000 원"
+        totalPriceWonLabel.textColor = .red
+        totalPriceWonLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        totalPriceStackView.axis = .horizontal
+        
+        bookingInfoStackView.axis = .vertical
+        bookingInfoStackView.alignment = .fill
+        bookingInfoStackView.backgroundColor = .clear
+        
+        payByLabel.text = "결제방법"
+        payByLabel.textColor = .black
+        payByLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+        
+        payButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1)
+        payButton.setTitle("결제하기", for: .normal)
+        payButton.layer.cornerRadius = 5
+        
     }
     
 }
     
-}
