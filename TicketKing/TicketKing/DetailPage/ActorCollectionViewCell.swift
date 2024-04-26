@@ -25,17 +25,17 @@ class ActorCollectionViewCell: UICollectionViewCell {
     }
     
     func configureUI() {
-        self.backgroundColor = .red
+        self.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
         self.layer.cornerRadius = 5
         
         contentView.addSubview(actorProfileImage)
         contentView.addSubview(actorNameLabel)
         
         
-        actorProfileImage.backgroundColor = .gray
+        actorProfileImage.backgroundColor = .red
         actorProfileImage.layer.cornerRadius = 5
         actorNameLabel.text = "배우이름"
-        actorNameLabel.textColor = .white
+        actorNameLabel.textColor = .black
         
         actorProfileImage.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)

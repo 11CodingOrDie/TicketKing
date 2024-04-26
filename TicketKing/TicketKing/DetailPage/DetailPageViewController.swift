@@ -13,7 +13,8 @@ class DetailPageViewController: UIViewController {
     let contentView = UIView()
         
     let posterImageView = UIImageView(image: UIImage(named: "jerry"))
-    let detailView = UIView()
+//    let detailView = UIView()
+    let detailView = UIImageView(image: UIImage(named: "Vector"))
     let movieTitleLabel = UILabel()
     let releaseYearLabel = UILabel()
     let genreLabel = UILabel()
@@ -38,6 +39,15 @@ class DetailPageViewController: UIViewController {
         return cv
     }()
     
+    let choiceCinemaLabel = UILabel()
+//    let cinemaTableView = UITableView()
+    let choiceCinemaButton = UIButton()
+    let choiceCinemaButton2 = UIButton()
+    let choiceCinemaButton3 = UIButton()
+    
+    let bottomView = UIView()
+    let buyTicketButton = UIButton()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +57,14 @@ class DetailPageViewController: UIViewController {
 
         actorListColletionView.delegate = self
         actorListColletionView.dataSource = self
+        
+//        cinemaTableView.delegate = self
+//        cinemaTableView.dataSource = self
     }
     
     func setupConstraints() { // addSubview, 오토레이아웃 등
+        view.addSubview(bottomView)
+        bottomView.addSubview(buyTicketButton)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(posterImageView)
@@ -64,13 +79,30 @@ class DetailPageViewController: UIViewController {
         contentView.addSubview(movieDescriptionLabel)
         contentView.addSubview(actorLabel)
         contentView.addSubview(actorListColletionView)
+        contentView.addSubview(choiceCinemaLabel)
+        contentView.addSubview(choiceCinemaButton)
+        contentView.addSubview(choiceCinemaButton2)
+        contentView.addSubview(choiceCinemaButton3)
+//        contentView.addSubview(cinemaTableView)
         
- 
-        scrollView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(40)
-            $0.horizontalEdges.equalToSuperview()
-            $0.bottom.equalToSuperview()
+        bottomView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(view)
+            make.height.equalTo(100)
         }
+        
+        buyTicketButton.snp.makeConstraints { make in
+            make.centerY.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.height.equalTo(70)
+        }
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalTo(view)
+            make.bottom.equalTo(bottomView.snp.top)
+        }
+        
         
         contentView.snp.makeConstraints {
             $0.width.equalToSuperview()
@@ -85,78 +117,112 @@ class DetailPageViewController: UIViewController {
         }
         
         detailView.snp.makeConstraints { make in
-            make.top.equalTo(posterImageView.snp.bottom).offset(-30)
+            make.top.equalTo(posterImageView.snp.centerY)
             make.bottom.equalToSuperview()
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
         }
         
         movieTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(detailView.snp.top).offset(20)
-            make.leading.equalTo(detailView.snp.leading).offset(20)
+            make.top.equalTo(detailView.snp.top).offset(35)
+            make.leading.equalTo(detailView.snp.leading).offset(26)
         }
         
         releaseYearLabel.snp.makeConstraints { make in
-            make.top.equalTo(movieTitleLabel.snp.bottom).offset(10)
-            make.leading.equalTo(detailView.snp.leading).offset(20)
+            make.top.equalTo(movieTitleLabel.snp.bottom).offset(9)
+            make.leading.equalTo(detailView.snp.leading).offset(26)
         }
         
         genreLabel.snp.makeConstraints { make in
-            make.leading.equalTo(releaseYearLabel.snp.trailing).offset(10)
+            make.top.equalTo(releaseYearLabel.snp.top)
+            make.leading.equalTo(releaseYearLabel.snp.trailing).offset(14)
             make.centerY.equalTo(releaseYearLabel.snp.centerY)
         }
         
         directorInfoView.snp.makeConstraints { make in
-            make.top.equalTo(releaseYearLabel.snp.bottom).offset(20)
-            make.leading.equalTo(detailView.snp.leading).offset(16)
-            make.trailing.equalTo(detailView.snp.trailing).offset(-16)
+            make.top.equalTo(releaseYearLabel.snp.bottom).offset(14)
+            make.centerX.equalToSuperview()
             make.height.equalTo(76)
+            make.width.equalTo(342)
         }
         
         directorImageView.snp.makeConstraints { make in
             make.top.equalTo(directorInfoView.snp.top).offset(10)
             make.bottom.equalTo(directorInfoView.snp.bottom).offset(-10)
-            make.leading.equalTo(directorInfoView.snp.leading).offset(16)
+            make.leading.equalTo(directorInfoView.snp.leading).offset(14)
             make.width.equalTo(55)
         }
         
         directorStackView.snp.makeConstraints { make in
-            make.leading.equalTo(directorImageView.snp.trailing).offset(10)
+            make.leading.equalTo(directorImageView.snp.trailing).offset(14)
             make.centerY.equalTo(directorImageView.snp.centerY)
         }
         
         movieDescription.snp.makeConstraints { make in
-            make.top.equalTo(directorInfoView.snp.bottom).offset(30)
+            make.top.equalTo(directorInfoView.snp.bottom).offset(32)
             make.leading.equalTo(directorInfoView.snp.leading)
         }
         
         movieDescriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(movieDescription.snp.bottom).offset(20)
+            make.top.equalTo(movieDescription.snp.bottom).offset(10)
             make.leading.equalTo(movieDescription.snp.leading)
             make.trailing.equalTo(directorInfoView.snp.trailing)
         }
         
         actorLabel.snp.makeConstraints { make in
-            make.top.equalTo(movieDescriptionLabel.snp.bottom).offset(30)
+            make.top.equalTo(movieDescriptionLabel.snp.bottom).offset(32)
             make.leading.equalTo(movieDescriptionLabel.snp.leading)
-//            make.bottom.equalToSuperview()
         }
         
         actorListColletionView.snp.makeConstraints { make in
-            make.top.equalTo(actorLabel.snp.bottom).offset(10)
-            make.leading.equalToSuperview()
+            make.top.equalTo(actorLabel.snp.bottom).offset(6)
+            make.leading.equalTo(actorLabel.snp.leading)
             make.trailing.equalToSuperview()
             make.height.equalTo(80)
-            make.bottom.equalToSuperview()
+        }
+        
+        choiceCinemaLabel.snp.makeConstraints { make in
+            make.top.equalTo(actorListColletionView.snp.bottom).offset(35)
+            make.leading.equalTo(actorLabel.snp.leading)
+        }
+        
+//        cinemaTableView.snp.makeConstraints { make in
+//            make.top.equalTo(choiceCinemaLabel.snp.bottom).offset(10)
+//            make.leading.trailing.equalToSuperview()
+//            make.bottom.equalToSuperview()
+//            
+//            make.height.equalTo(300)
+//        }
+        
+        choiceCinemaButton.snp.makeConstraints { make in
+            make.top.equalTo(choiceCinemaLabel.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(70)
+            make.width.equalTo(341)
+        }
+        
+        choiceCinemaButton2.snp.makeConstraints { make in
+            make.top.equalTo(choiceCinemaButton.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(70)
+            make.width.equalTo(341)
+        }
+        
+        choiceCinemaButton3.snp.makeConstraints { make in
+            make.top.equalTo(choiceCinemaButton2.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(70)
+            make.width.equalTo(341)
+            make.bottom.equalToSuperview().offset(-10)
         }
     }
     
     func configureUI() { // UI 요소들의 속성을 대입(컬러, text 등)
         posterImageView.backgroundColor = .orange
         
-        detailView.backgroundColor = .gray
-        detailView.layer.cornerRadius = 15
-        detailView.alpha = 0.5
+//        detailView.backgroundColor = .gray
+//        detailView.layer.cornerRadius = 15
+//        detailView.alpha = 0.5
         
         movieTitleLabel.text = "영화제목"
         movieTitleLabel.textColor = .white
@@ -178,9 +244,11 @@ class DetailPageViewController: UIViewController {
         
         directorLabel.text = "감독"
         directorLabel.textColor = .white
+        directorLabel.font = .systemFont(ofSize: 13, weight: .medium)
         
         directorNameLabel.text = "감독이름"
         directorNameLabel.textColor = .white
+        directorNameLabel.font = .systemFont(ofSize: 13, weight: .medium)
         
         directorStackView.spacing = 3
         directorStackView.axis = .vertical
@@ -200,9 +268,38 @@ class DetailPageViewController: UIViewController {
         actorLabel.textColor = .white
         actorLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         
-        actorListColletionView.backgroundColor = .blue
+        actorListColletionView.backgroundColor = .clear
         actorListColletionView.register(ActorCollectionViewCell.self, forCellWithReuseIdentifier: ActorCollectionViewCell.identifier)
         
+        
+        choiceCinemaLabel.text = "영화관 선택"
+        choiceCinemaLabel.textColor = .black
+        choiceCinemaLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+        
+//        cinemaTableView.register(CinemaTableViewCell.self, forCellReuseIdentifier: CinemaTableViewCell.identifier)
+//        cinemaTableView.backgroundColor = .clear
+//        cinemaTableView.separatorStyle = .none
+        
+        bottomView.backgroundColor = #colorLiteral(red: 0.5490196078, green: 0.8039215686, blue: 0.7725490196, alpha: 1) //rgba(140, 205, 197, 1)
+        
+        buyTicketButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1) //rgba(233, 38, 44, 1)
+        buyTicketButton.setTitle("예매하기", for: .normal)
+        buyTicketButton.layer.cornerRadius = 5
+        
+        choiceCinemaButton.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
+        choiceCinemaButton.setTitle("티켓박스 내일점", for: .normal)
+        choiceCinemaButton.layer.cornerRadius = 5
+        choiceCinemaButton.setTitleColor(.black, for: .normal)
+        
+        choiceCinemaButton2.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
+        choiceCinemaButton2.setTitle("티켓박스 배움점", for: .normal)
+        choiceCinemaButton2.layer.cornerRadius = 5
+        choiceCinemaButton2.setTitleColor(.black, for: .normal)
+        
+        choiceCinemaButton3.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
+        choiceCinemaButton3.setTitle("티켓박스 캠프점", for: .normal)
+        choiceCinemaButton3.layer.cornerRadius = 5
+        choiceCinemaButton3.setTitleColor(.black, for: .normal)
 
     }
     
@@ -248,3 +345,20 @@ extension DetailPageViewController: UICollectionViewDelegate, UICollectionViewDa
         return CGSize(width: 125, height: 57)
     }
 }
+
+//extension DetailPageViewController: UITableViewDelegate, UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return 3
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        guard let cell = cinemaTableView.dequeueReusableCell(withIdentifier: CinemaTableViewCell.identifier, for: indexPath) as? CinemaTableViewCell else { return UITableViewCell() }
+//        cell.selectionStyle = .none
+//        cell.clipsToBounds = true
+//        return cell
+//    }
+//    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 100
+//    }
+//}
