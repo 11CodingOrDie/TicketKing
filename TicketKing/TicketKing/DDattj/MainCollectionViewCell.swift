@@ -12,15 +12,26 @@ class MainCollectionViewCell: UICollectionViewCell {
     //cell 식별자명 지정
     static let identifier = "MainCollectionViewCell"
     
-    //cell에 들어갈 이미지 사이즈와 영역 설정
-    private let releasedMovieSize = CGSize(width: 221, height: 279)
-    private let releasedMovieView: UIImageView = {
+    let releasedMoviePoster: UIImageView = {
         var imageview = UIImageView()
         imageview.layer.cornerRadius = 10
         imageview.backgroundColor = .gray
         return imageview
     }()
     
+    let releasedMovieTitle: UILabel = {
+        var title = UILabel()
+        title.text = "제목"
+        title.font = UIFont.systemFont(ofSize: 16)
+        return title
+    }()
+    
+    let releasedMovieGenre: UILabel = {
+        var genre = UILabel()
+        genre.text = "장르"
+        genre.font = UIFont.systemFont(ofSize: 15)
+        return genre
+    }()
     
     
     
@@ -35,7 +46,9 @@ class MainCollectionViewCell: UICollectionViewCell {
     }
     
     private func setUI() {
-        self.addSubview(releasedMovieView)
+        self.addSubview(releasedMoviePoster)
+        self.addSubview(releasedMovieTitle)
+        self.addSubview(releasedMovieGenre)
     }
     
     private func setConstraint(){
@@ -44,20 +57,24 @@ class MainCollectionViewCell: UICollectionViewCell {
     
     //오토레이아웃 잡기
     private func configurereleasedMovieViewConstaint() {
-        releasedMovieView.translatesAutoresizingMaskIntoConstraints = false //자동오토레이아웃 설정 끄기
+        releasedMoviePoster.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            releasedMovieView.topAnchor.constraint(equalTo: self.topAnchor),
-            releasedMovieView.widthAnchor.constraint(equalToConstant: releasedMovieSize.width),
-            releasedMovieView.heightAnchor.constraint(equalToConstant: releasedMovieSize.height),
-            releasedMovieView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            releasedMoviePoster.topAnchor.constraint(equalTo: self.topAnchor),
+            releasedMoviePoster.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            releasedMoviePoster.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            releasedMoviePoster.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-    }
-    
-    
-    
-    
-    //url 불러와 설정해준 이미지 영역에 넣기
-    func configure(with movie: MovieModel) {
-        releasedMovieView.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)"), placeholderImage: UIImage(named: "placeholder"))
+        
+        releasedMovieTitle.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieTitle.centerXAnchor.constraint(equalTo: releasedMoviePoster.centerXAnchor), // releasedMovieView의 중앙과 정렬
+            releasedMovieTitle.bottomAnchor.constraint(equalTo: releasedMoviePoster.bottomAnchor, constant: 30) // releasedMovieView의 세로 중앙과 정렬
+        ])
+        
+        releasedMovieGenre.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            releasedMovieGenre.centerXAnchor.constraint(equalTo: releasedMoviePoster.centerXAnchor), // releasedMovieView의 중앙과 정렬
+            releasedMovieGenre.bottomAnchor.constraint(equalTo: releasedMoviePoster.bottomAnchor, constant: 50), // releasedMovieView의 세로 중앙과 정렬
+        ])
     }
 }
