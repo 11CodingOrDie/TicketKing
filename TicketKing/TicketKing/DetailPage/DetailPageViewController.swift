@@ -228,7 +228,7 @@ class DetailPageViewController: UIViewController {
         movieTitleLabel.textColor = .white
         movieTitleLabel.font = .systemFont(ofSize: 22, weight: .semibold)
         
-        directorInfoView.backgroundColor = #colorLiteral(red: 0.1254901961, green: 0.337254902, blue: 0.3254901961, alpha: 1)
+        directorInfoView.backgroundColor = #colorLiteral(red: 0.537254902, green: 0.5058823529, blue: 0.5411764706, alpha: 1)
         directorInfoView.layer.cornerRadius = 5
         directorInfoView.clipsToBounds = true
         
@@ -270,6 +270,7 @@ class DetailPageViewController: UIViewController {
         
         actorListColletionView.backgroundColor = .clear
         actorListColletionView.register(ActorCollectionViewCell.self, forCellWithReuseIdentifier: ActorCollectionViewCell.identifier)
+        actorListColletionView.showsHorizontalScrollIndicator = false
         
         
         choiceCinemaLabel.text = "영화관 선택"
