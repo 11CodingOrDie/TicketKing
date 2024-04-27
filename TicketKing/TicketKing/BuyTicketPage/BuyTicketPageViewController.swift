@@ -13,7 +13,7 @@ class BuyTicketPageViewController: UIViewController {
     let posterImageView = UIImageView()
     let movieTitleLabel = UILabel()
     let genreLabel = UILabel()
-    let dateLabel = UILabel()
+    var dateLabel = UILabel()
     let timeLabel = UILabel()
     lazy var movieInfoStackView = UIStackView(arrangedSubviews: [movieTitleLabel, genreLabel, dateLabel, timeLabel])
     let payingView = UIImageView(image: UIImage(named: "buyticketpage"))

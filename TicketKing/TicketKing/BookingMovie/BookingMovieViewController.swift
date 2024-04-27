@@ -8,6 +8,13 @@
 import UIKit
 import SnapKit
 
+struct SavedBookingData: Codable {
+    let seat: String
+    let date: String
+    let time: String
+}
+
+
 class BookingMovieViewController: UIViewController {
     let dates = ["4월 29일", "4월 30일", "5월  1일", "5월  2일", "5월 3일", "5월 4일", "5월 6일", "5월  7일"]
     let times = ["09 : 00", "11 : 30", "13 : 00", "15 : 30", "18 : 00", "20 : 30", "23 : 00"]
@@ -160,7 +167,7 @@ class BookingMovieViewController: UIViewController {
         lineView.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
         totalPriceLabel.text = "총 금액"
         totalPriceLabel.font = .systemFont(ofSize: 17, weight: .bold)
-        totalPriceWonLabel.text = "000원"
+        totalPriceWonLabel.text = "0 원"
         totalPriceWonLabel.font = .systemFont(ofSize: 17, weight: .bold)
         moveToPayentPageButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1)
         moveToPayentPageButton.setTitle("결제창 이동", for: .normal)
