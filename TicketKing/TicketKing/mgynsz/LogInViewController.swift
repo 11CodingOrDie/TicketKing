@@ -98,9 +98,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         userIDTextField.delegate = self
         passwordTextField.delegate = self
         
-        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         
+        signUpButton.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
@@ -109,7 +109,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @objc private func toggleCheckbox(_ sender: UIButton) {
         sender.isSelected.toggle()
         UserDefaults.standard.set(sender.isSelected, forKey: "isUserLoggedIn")
-        NotificationCenter.default.post(name: .didChangeLoginStatus, object: nil)
     }
     
     @objc func dismissKeyboard() {
@@ -149,7 +148,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(userIDTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
-//        view.addSubview(stayLoggedInView)
         view.addSubview(signUpButton)
         
         logoImageView.snp.makeConstraints { make in
@@ -182,47 +180,35 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             make.centerX.equalToSuperview()
             make.top.equalTo(passwordTextField.snp.bottom).offset(32)
             make.left.right.equalTo(view).inset(16)
-            make.height.equalTo(50)
+            make.height.equalTo(60)
         }
     }
     
+    
     @objc private func loginButtonTapped() {
         guard let userID = userIDTextField.text, !userID.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty else {
-            print("Username or password cannot be empty")
-            // 여기서 사용자에게 UI 피드백을 주는 것이 좋습니다, 예: 오류 메시지 표시
+              let password = passwordTextField.text, !password.isEmpty,
+              let user = UserManager.shared.loadUser(userID: userID),
+              user.password == password else {
+            print("Invalid username or password")
             return
         }
-
-        if let user = UserManager.shared.loadUser(userID: userID), user.password == password {
-            print("Login successful")
-            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            UserDefaults.standard.set(userID, forKey: "currentUserID") // 사용자 ID 저장
-//            proceedToMainInterface()
-        } else {
-            print("Invalid username or password")
-            UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-            // 로그인 실패 시 사용자에게 알림 표시 등의 UI 업데이트를 여기에 추가
-        }
         
-        // 회원가입 후 메인 화면으로 전환
-        if let navigationController = navigationController {
-            let mainViewController = MainViewController()
-            navigationController.pushViewController(mainViewController, animated: true)
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        print("Login successful")
+        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+        UserDefaults.standard.set(userID, forKey: "currentUserID") // 사용자 ID 저장
+        
+        navigateToMainViewController()
     }
 
-//    private func proceedToMainInterface() {
-//        // 회원가입 후 메인 화면으로 전환
-//        if let navigationController = navigationController {
-//            let mainViewController = MainViewController()
-//            navigationController.pushViewController(mainViewController, animated: true)
-//        } else {
-//            dismiss(animated: true, completion: nil)
-//        }
-//    }
+    
+
+    private func navigateToMainViewController() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? SceneDelegate {
+            sceneDelegate.setupTabBarController()
+        }
+    }
 
     @objc private func signUpButtonTapped() {
         let signUpVC = SignUpViewController()

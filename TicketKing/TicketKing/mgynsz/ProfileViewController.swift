@@ -49,97 +49,28 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         return button
     }()
     
-    private let loginButton: UIButton = {
+    private let logoutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.layer.backgroundColor = UIColor(red: 0.102, green: 0.604, blue: 0.545, alpha: 1).cgColor
-        button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 5.5
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        button.setTitle("로그아웃", for: .normal)
+        button.setTitleColor(.red, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return button
     }()
-    
-    private let logoImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "logo"))
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.opacity = 0.1
-        return imageView
-    }()
-    
-    private var isLoggedIn: Bool {
-        return UserDefaults.standard.bool(forKey: "isUserLoggedIn")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         navigationItem.hidesBackButton = true
         setupLayout()
-
-        loginButton.addTarget(self, action: #selector(navigateToLogin), for: .touchUpInside)
         
-        // NotificationCenter에 로그인 상태 변경 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(updateUIBasedOnLoginStatus), name: .didChangeLoginStatus, object: nil)
-        
-        setupNotifications()
-        updateUIBasedOnLoginStatus()
-        fetchNowPlayingMovies()
-        changeImageButton.addTarget(self, action: #selector(changeImageTapped), for: .touchUpInside)
-//        tableView.register(ProfileViewTableViewCell.self, forCellReuseIdentifier: "ProfileViewTableViewCell")
-
-//        setupLayout()
-//        setupNotifications()
-//        updateUIBasedOnLoginStatus()
-    }
-    func loginUser(withID userID: String, password: String) {
-        // 예시: 사용자 검증 로직
-        if userID == "expectedUserID" && password == "expectedPassword" {
-            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            UserDefaults.standard.set(userID, forKey: "currentUserID")
-            NotificationCenter.default.post(name: .didChangeLoginStatus, object: nil)
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        loadUserProfile()
+        if let userID = UserDefaults.standard.string(forKey: "currentUserID") {
+            loadImage(userID: userID)
         } else {
-            print("Login failed: Invalid credentials")
+            print("No user ID found in UserDefaults")
         }
-    }
-
-    func logoutUser() {
-        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-        UserDefaults.standard.removeObject(forKey: "currentUserID")
-        NotificationCenter.default.post(name: .didChangeLoginStatus, object: nil)
-    }
-    
-    
-    func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateUIBasedOnLoginStatus), name: .didChangeLoginStatus, object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc private func updateUIBasedOnLoginStatus() {
-        DispatchQueue.main.async {
-            if UserDefaults.standard.bool(forKey: "isUserLoggedIn") {
-                // 로그인 상태일 때 UI 업데이트
-                self.loginButton.isHidden = true
-                self.profileImageView.isHidden = false
-                self.nameLabel.isHidden = false
-                self.emailLabel.isHidden = false
-                self.changeImageButton.isHidden = false
-                self.logoImageView.isHidden = true
-                self.loadUserProfile()
-            } else {
-                // 로그아웃 상태일 때 UI 업데이트
-                self.loginButton.isHidden = false
-                self.profileImageView.isHidden = true
-                self.nameLabel.isHidden = true
-                self.emailLabel.isHidden = true
-                self.changeImageButton.isHidden = true
-                self.logoImageView.isHidden = false
-                self.profileImageView.image = UIImage(named: "defaultProfile")
-            }
-        }
+        changeImageButton.addTarget(self, action: #selector(changeImageTapped), for: .touchUpInside)
     }
     
     private func setupLayout() {
@@ -147,8 +78,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         view.addSubview(nameLabel)
         view.addSubview(emailLabel)
         view.addSubview(changeImageButton)
-        view.addSubview(loginButton)
-        view.addSubview(logoImageView)
+        view.addSubview(logoutButton)
         
         profileImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)
@@ -171,20 +101,10 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
             make.centerX.equalTo(profileImageView.snp.centerX)
         }
         
-        loginButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)
-            make.centerX.equalToSuperview()
-            //            make.centerY.equalTo(view.snp.centerY)
-            make.left.right.equalTo(view).inset(16)
-            make.height.equalTo(50)
+        logoutButton.snp.makeConstraints { make in
+            make.top.equalTo(nameLabel.snp.top)
+            make.trailing.equalTo(view.snp.trailing).offset(-16)
         }
-        
-        logoImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(view.snp.top).offset(550)
-        }
-        
-        
         
         setupSegmentControl()
     }
@@ -229,13 +149,6 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
-    @objc func navigateToLogin() {
-        let loginVC = LogInViewController()
-        loginVC.modalPresentationStyle = .formSheet
-        loginVC.modalTransitionStyle = .coverVertical
-        self.present(loginVC, animated: true, completion: nil)
-    }
-    
     @objc private func segmentButtonTapped(_ sender: UIButton) {
         for button in buttons {
             button.isSelected = (button == sender)
@@ -252,13 +165,26 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
-//    // 임시 데이터 로드 함수
-//    private func loadTemporaryData() {
-//        nameLabel.text = "mgynsz"
-//        emailLabel.text = "mgynsz@gmail.com"
-//        profileImageView.image = UIImage(systemName: "person.crop.circle") // 시스템 아이콘 사용
-//    }
-//    
+    @objc func logoutTapped() {
+        // 로그인 상태 정보 제거
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.removeObject(forKey: "currentUserID")
+        UserDefaults.standard.removeObject(forKey: "profileImageFilename")
+
+        // 로그인 뷰 컨트롤러로 전환
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? SceneDelegate,
+           let window = sceneDelegate.window {
+            let loginViewController = LogInViewController()
+            let navigationController = UINavigationController(rootViewController: loginViewController)
+            window.rootViewController = navigationController
+            window.makeKeyAndVisible()
+        } else {
+            print("Unable to access the SceneDelegate window")
+        }
+    }
+
+    
     @objc private func changeImageTapped() {
         presentImagePicker()
     }
@@ -274,7 +200,9 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             profileImageView.image = editedImage
-            saveImage(image: editedImage)
+            if let userID = UserDefaults.standard.string(forKey: "currentUserID") {
+                saveImage(image: editedImage, userID: userID) // 사용자 ID를 포함하여 이미지 저장
+            }
         }
         picker.dismiss(animated: true, completion: nil)
     }
@@ -283,113 +211,58 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         picker.dismiss(animated: true, completion: nil)
     }
     
-    private func saveImage(image: UIImage) {
+    // Documents 디렉토리의 URL을 반환하는 함수
+    private func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func loadImage(userID: String) {
+        let filenameKey = "profileImageFilename_\(userID)"
+        if let filename = UserDefaults.standard.string(forKey: filenameKey) {
+            let fileURL = getDocumentsDirectory().appendingPathComponent(filename)
+            if let imageData = FileManager.default.contents(atPath: fileURL.path) {
+                let image = UIImage(data: imageData)
+                profileImageView.image = image
+                print("Loaded image from: \(fileURL)")
+            } else {
+                // 이미지 파일이 없거나 읽을 수 없을 때 기본 이미지 설정
+                profileImageView.image = UIImage(systemName: "person")
+                print("Failed to load image from \(fileURL)")
+            }
+        } else {
+            // UserDefaults에 파일 이름이 저장되어 있지 않을 때
+            profileImageView.image = UIImage(systemName: "person")
+            print("No image found for user \(userID)")
+        }
+    }
+    
+    func saveImage(image: UIImage, userID: String) {
         if let data = image.jpegData(compressionQuality: 1.0) {
-            let fileURL = getDocumentsDirectory().appendingPathComponent("profileImage.jpg")
+            let filename = "profileImage_\(userID).jpg" // 사용자 ID를 포함한 파일명
+            let fileURL = getDocumentsDirectory().appendingPathComponent(filename)
             do {
                 try data.write(to: fileURL)
-                print("Image saved: \(fileURL)")
+                UserDefaults.standard.set(filename, forKey: "profileImageFilename_\(userID)")
+                profileImageView.image = UIImage(data: data)
+                print("Image saved at: \(fileURL)")
             } catch {
                 print("Error saving image: \(error)")
             }
         }
     }
     
-    private func loadImage() {
-        if let imagePath = UserDefaults.standard.string(forKey: "profileImagePath"),
-           let imageData = FileManager.default.contents(atPath: imagePath) {
-            let image = UIImage(data: imageData)
-            profileImageView.image = image
-        } else {
-            print("Failed to load image from path")
-        }
-    }
-
-    
-    private func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    
-    private func loadUserProfile() {
+    @objc private func loadUserProfile() {
         guard let userID = UserDefaults.standard.string(forKey: "currentUserID") else {
             print("No user ID found in UserDefaults")
             return
         }
         
         if let user = UserManager.shared.loadUser(userID: userID) {
-            // 로드 성공시 UI 업데이트
-            DispatchQueue.main.async {
-                self.nameLabel.text = user.name
-                self.emailLabel.text = user.email
-                if let imageData = user.profileImageData {
-                    self.profileImageView.image = UIImage(data: imageData)
-                }
-            }
+            nameLabel.text = user.name
+            emailLabel.text = user.email
         } else {
             print("Failed to load user profile")
-        }
-    }
-
-    
-    func loadUserMovies() {
-        guard let user = user else { return }
-        Task {
-            do {
-                favoriteMovies = try await fetchMoviesDetails(ids: user.favoriteMovies)
-                bookedMovies = try await fetchMoviesDetails(ids: user.bookedMovies)
-                // UI 업데이트 로직
-            } catch {
-                print("Error fetching movies: \(error)")
-            }
-        }
-    }
-    
-    private func fetchMoviesDetails(ids: [String]) async throws -> [MovieDetails] {
-        var details: [MovieDetails] = []
-        for id in ids {
-            if let movieId = Int(id) {
-                let detail = try await MovieManager.shared.fetchMovieDetails(for: movieId)
-                details.append(detail)
-            }
-        }
-        return details
-    }
-    
-    // TableView 설정
-    private func setupTableView() {
-        tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(ProfileViewTableViewCell.self, forCellReuseIdentifier: "ProfileViewTableViewCell")
-        tableView.dataSource = self
-        tableView.delegate = self
-        view.addSubview(tableView)
-        
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(indicatorView.snp.bottom).offset(20)
-            make.left.right.equalTo(view)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-        }
-    }
-    
-    // 사용자 영화 정보가 아닌 임시로 영화 데이터 가져오기
-    private func fetchNowPlayingMovies(language: String = "ko-KR", page: Int = 1) {
-        Task {
-            await GenreManager.shared.loadGenresAsync()
-            do {
-                let nowPlayingMovies = try await MovieManager.shared.fetchNowPlayingMovies(page: page, language: language)
-                self.nowPlayingMovies = nowPlayingMovies
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    if let tableView = self.tableView {
-                        tableView.reloadData()
-                    } else {
-                        print("TableView is not initialized")
-                    }
-                }
-            } catch {
-                print("Error fetching popular movies: \(error)")
-            }
         }
     }
     
@@ -425,6 +298,3 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 }
 
-extension Notification.Name {
-    static let didChangeLoginStatus = Notification.Name("didChangeLoginStatus")
-}

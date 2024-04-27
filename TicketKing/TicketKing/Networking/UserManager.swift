@@ -47,13 +47,7 @@ class UserManager {
             UserDefaults.standard.set(encoded, forKey: user.userID)
             print("User saved successfully")
             
-            // 바로 데이터 로드해서 확인
-            if let loadedUser = loadUser(userID: user.userID) {
-                print("Loaded User: \(loadedUser)")
-            } else {
-                print("Failed to load user right after saving")
-            }
-            
+            NotificationCenter.default.post(name: NSNotification.Name("UserLoggedIn"), object: nil)
         } catch {
             print("Failed to save user: \(error)")
         }

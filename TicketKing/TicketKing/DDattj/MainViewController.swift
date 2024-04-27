@@ -25,10 +25,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return tableView
     }()
 //    var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
-    
-    
-    
-    
+
     // 브랜드 로고 넣기
     let brandLogo: UIImageView = {
         let appTitle = UIImageView(image: UIImage(named: "title"))
@@ -77,10 +74,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         moreFilms.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         return moreFilms
     }()
-    
-    
-    
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -104,9 +98,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         view.addSubview(seeUpComingMovies)
         autoLayout()
     }
-    
-    
-    
+
     //인기 영화 데이터 가져오기
     private func fetchPopularMovies(language: String = "ko-KR", page: Int = 1) {
         Task {
@@ -143,9 +135,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         releasedMovieView.reloadData()
     } //지정한 컬렉션뷰로 데이터 이동
     
-    
-    
-    
     //컬렉션뷰 설정
     func collectionView() {
         let layout = UICollectionViewFlowLayout()
@@ -175,8 +164,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return cell
     }
 
-
-    
     //셀 사이즈 지정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView === self.releasedMovieView {
@@ -188,9 +175,20 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    
-    
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedMovie = popularMovies[indexPath.row]
+        let detailViewController = MovieDetailView()
+        detailViewController.movie = selectedMovie  // 영화 정보 전달
+
+        let navigationController = UINavigationController(rootViewController: detailViewController)
+
+        // 모달 뷰 전체 화면으로 설정
+        navigationController.modalPresentationStyle = .fullScreen
+
+        // 현재 뷰 컨트롤러에서 모달 방식으로 네비게이션 컨트롤러 표시
+        present(navigationController, animated: true)
+    }
+
     // 테이블뷰 설정
     func tableView() {
         comingUpMovieView.rowHeight = UITableView.automaticDimension
@@ -213,13 +211,24 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedMovie = upcomingMovies[indexPath.row]
+        let detailViewController = MovieDetailView()
+        detailViewController.movie = selectedMovie  // 영화 정보 전달
+
+        let navigationController = UINavigationController(rootViewController: detailViewController)
+
+        // 모달 뷰 전체 화면으로 설정
+        navigationController.modalPresentationStyle = .fullScreen
+
+        // 현재 뷰 컨트롤러에서 모달 방식으로 네비게이션 컨트롤러 표시
+        present(navigationController, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100 // 원하는 높이를 리턴합니다.
     }
-    
-    
-    
-    
+
     //컬렉션뷰의 오토레이아웃
     func configurereleasedMovieViewConstaint() {
         releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
@@ -303,6 +312,4 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
             person.bottomAnchor.constraint(equalTo: myimage.bottomAnchor, constant: -5) // myimage의 하단에 맞춤
         ])
     }
-    
-    
 }

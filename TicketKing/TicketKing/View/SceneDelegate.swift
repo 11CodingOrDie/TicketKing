@@ -13,71 +13,57 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // 사용자 정보를 확인
-        if let userID = UserDefaults.standard.string(forKey: "userID") {
-            // 사용자 ID를 찾았을 때의 처리
-            print("User ID found:", userID)
+        // UIWindow 생성
+        window = UIWindow(windowScene: windowScene)
+        
+        // 로그인 상태에 따라 초기 뷰 컨트롤러 결정
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        if isLoggedIn {
+            // 로그인 되어 있으면 탭 바 컨트롤러를 루트로 설정
+            setupTabBarController()
         } else {
-            // 사용자 ID가 없을 때의 처리
-            print("No user ID found in UserDefaults")
+            // 로그인 되어 있지 않으면 로그인 뷰 컨트롤러를 루트로 설정
+            let loginViewController = LogInViewController()
+            let navigationController = UINavigationController(rootViewController: loginViewController)
+            window?.rootViewController = navigationController
         }
         
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        
-//        let loginViewController = ProfileViewController()
-//        let navigationController = UINavigationController(rootViewController: loginViewController)
-        
-        // 탭 바 컨트롤러 생성
+        window?.makeKeyAndVisible()
+    }
+
+    func setupTabBarController() {
         let tabBarController = UITabBarController()
         
-        // 첫 번째 탭
+        // 첫 번째 탭: 메인 뷰 컨트롤러
         let mainVC = MainViewController()
-        mainVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), tag: 0)
-        mainVC.view.backgroundColor = .white
-        tabBarController.viewControllers = [UINavigationController(rootViewController: mainVC)]
+        mainVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
         
-        // 두 번째 탭
-        let searchVC = ProfileViewController()
-        searchVC.view.backgroundColor = .white
+        // 두 번째 탭: 검색 뷰 컨트롤러
+        let searchVC = ExMovieViewController()
         searchVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
         
-        // 세 번째 탭
-        let ticketVC = ExMovieViewController()
-        ticketVC.view.backgroundColor = .white
-        ticketVC.tabBarItem = UITabBarItem(title: "Ticket", image: UIImage(systemName: "bell.fill"), tag: 2)
+        // 세 번째 탭: 프로필 뷰 컨트롤러
+        let profileVC = ProfileViewController()
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 2)
         
-        // 네 번째 탭
-        let profileVC = LogInViewController()
-        profileVC.view.backgroundColor = .white
-        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "gear"), tag: 3)
+        tabBarController.viewControllers = [UINavigationController(rootViewController: mainVC), UINavigationController(rootViewController: searchVC), UINavigationController(rootViewController: profileVC)]
+        tabBarController.selectedIndex = 0 // 기본 선택 탭 설정 (예: 홈 화면)
         
-        // 탭 바 컨트롤러에 뷰 컨트롤러 추가
-        tabBarController.viewControllers = [mainVC, searchVC, ticketVC, profileVC]
-        
-        // 탭 바 모양
+        // 탭 바 모양 설정
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.backgroundColor = UIColor(red: 0.075, green: 0.412, blue: 0.4, alpha: 1)
-                
-        // 선택되지 않은 탭 색상
         tabBarAppearance.stackedLayoutAppearance.normal.iconColor = UIColor.gray
         tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gray]
-        
-        // 선택 탭 색상
         tabBarAppearance.stackedLayoutAppearance.selected.iconColor = UIColor.white
         tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        
-        // 모든 탭 바 인스턴스에 적용
         UITabBar.appearance().standardAppearance = tabBarAppearance
         if #available(iOS 15.0, *) {
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         }
-        
-        window = UIWindow(windowScene: windowScene)
+
         window?.rootViewController = tabBarController
-        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
