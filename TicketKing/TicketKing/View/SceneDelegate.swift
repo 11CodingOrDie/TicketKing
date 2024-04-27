@@ -77,8 +77,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
 //        window?.rootViewController = LogInViewController() // 원하는 뷰컨트롤러로 변경해주기
-        // window?.rootViewController = BookingMovieViewController()
-        window?.rootViewController = tabBarController
+         window?.rootViewController = BookingMovieViewController()
+//        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
 
