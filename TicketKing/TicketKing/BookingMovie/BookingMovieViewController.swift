@@ -43,6 +43,14 @@ class BookingMovieViewController: UIViewController {
     
     let lineView = UIView()
     let totalPriceLabel = UILabel()
+    var selectedSeatCount = 0 {
+        didSet {
+            // selectedSeatCount 변수가 변경될 때마다 UILabel 업데이트
+            
+//            let totalPrice = selectedSeatCount * 10000
+            totalPriceWonLabel.text = String((selectedSeatCount * 10000).formatted(.currency(code: "KRW")))
+        }
+    }
     let totalPriceWonLabel = UILabel()
     let moveToPayentPageButton = UIButton()
   
@@ -157,17 +165,28 @@ class BookingMovieViewController: UIViewController {
         moveToPayentPageButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1)
         moveToPayentPageButton.setTitle("결제창 이동", for: .normal)
         moveToPayentPageButton.layer.cornerRadius = 5
-        moveToPayentPageButton.addTarget(self, action: #selector(moveToPayentPageButtonClicked), for: .touchUpInside)
+        moveToPayentPageButton.addTarget(self, action: #selector(checkMessageAlert), for: .touchUpInside)
+        
+    }
+    @objc func checkMessageAlert() {
+        let oklAlert = UIAlertController(title: "영화를 예매하시겠습니까?", message: "확인을 누를시 결제창으로 이동합니다", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let okAction = UIAlertAction(title: "결제하기", style: .default) { action in
+            self.moveToPayentPageButtonClicked()
+        }
+        oklAlert.addAction(cancelAction)
+        oklAlert.addAction(okAction)
+        self.present(oklAlert, animated: true)
     }
     
-    @objc func moveToPayentPageButtonClicked() {
+     func moveToPayentPageButtonClicked() {
         print("clicked button")
         let buyTicketPageViewController = BuyTicketPageViewController()
 //        navigationController?.pushViewController(buyTicketPageViewController, animated: true) //navigationController 연결시
         buyTicketPageViewController.modalPresentationStyle = .fullScreen
         present(buyTicketPageViewController, animated: true, completion: nil)
     }
- 
+
 }
 
 
@@ -244,7 +263,8 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
         
         if collectionView == selectSeatCollectionView {
             print("좌석 \(indexPath.item)")
-        } 
+            selectedSeatCount += 1
+        }
         else if collectionView == selectDateCollectionView {
             print(dates[indexPath.item])
         }
@@ -253,6 +273,9 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        selectedSeatCount -= 1
+    }
     // 좌석셀 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         8
