@@ -16,7 +16,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return imageView
     }()
     
-    private let usernameTextField: UITextField = {
+    private let userIDTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "아이디"
         textField.borderStyle = .roundedRect
@@ -35,7 +35,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         // 텍스트 필드의 leftView에 imageView 추가
         let symbolView = UIView(frame: CGRect(x: 0, y: 0, width: 48, height: 48))
-        imageView.frame = CGRect(x: 10, y: 14, width: 20, height: 20) // imageView 위치 조정
+        imageView.frame = CGRect(x: 10, y: 14, width: 20, height: 20)
         symbolView.addSubview(imageView)
         
         textField.leftView = symbolView
@@ -46,7 +46,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     private let passwordTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "비밀번호"
+        textField.placeholder = "패스워드"
         textField.borderStyle = .roundedRect
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.black.cgColor
@@ -55,6 +55,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textField.autocapitalizationType = .none
         textField.keyboardType = .default
+        textField.isSecureTextEntry = true
         
         // 이미지 뷰 생성 및 설정
         let imageView = UIImageView(image: UIImage(systemName: "lock"))
@@ -84,27 +85,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
-//    private lazy var stayLoggedInView: UIStackView = {
-//        let checkBox = UIButton(type: .custom)
-//        checkBox.setImage(UIImage(systemName: "square"), for: .normal)
-//        checkBox.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
-//        checkBox.tintColor = .gray
-//        checkBox.addTarget(self, action: #selector(toggleCheckbox), for: .touchUpInside)
-//        
-//        let label = UILabel()
-//        label.text = "로그인 상태 유지"
-//        label.font = UIFont.systemFont(ofSize: 16)
-//        label.textColor = .gray
-//        
-//        let stackView = UIStackView(arrangedSubviews: [checkBox, label])
-//        stackView.axis = .horizontal
-//        stackView.spacing = 8
-//        stackView.alignment = .center
-//        stackView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        return stackView
-//    }()
-    
     private let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("회원가입", for: .normal)
@@ -115,7 +95,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupLayout()
-        usernameTextField.delegate = self
+        userIDTextField.delegate = self
         passwordTextField.delegate = self
         
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
@@ -123,40 +103,50 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
+        
     }
     
-//    @objc private func toggleCheckbox(_ sender: UIButton) {
-//        sender.isSelected.toggle()
-//        UserDefaults.standard.set(sender.isSelected, forKey: "isUserLoggedIn")
-//    }
+    @objc private func toggleCheckbox(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        UserDefaults.standard.set(sender.isSelected, forKey: "isUserLoggedIn")
+        NotificationCenter.default.post(name: .didChangeLoginStatus, object: nil)
+    }
     
     @objc func dismissKeyboard() {
         view.endEditing(true)  // 모든 텍스트 필드의 편집을 종료하고 키보드를 숨깁니다.
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField == usernameTextField {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        print("textFieldShouldReturn: \(textField.placeholder ?? "")")
+        return true
+    }
+    
+    private func textFieldDidBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == userIDTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
-            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
+            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor
         } else if textField == passwordTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .black
-            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor  // 활성화 시 테두리 색상을 초록색으로 변경
+            textField.layer.borderColor = UIColor(red: 0.914, green: 0.149, blue: 0.173, alpha: 1).cgColor
         }
+        print("textFieldShouldBeginEditing: \(textField.placeholder ?? "")")
+            return true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField == usernameTextField {
+        if textField == userIDTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .gray
-            textField.layer.borderColor = UIColor.gray.cgColor  // 비활성화 시 테두리 색상을 검정색으로 변경
+            textField.layer.borderColor = UIColor.gray.cgColor
         } else if textField == passwordTextField {
             (textField.leftView?.subviews.first as? UIImageView)?.tintColor = .gray
-            textField.layer.borderColor = UIColor.gray.cgColor  // 비활성화 시 테두리 색상을 검정색으로 변경
+            textField.layer.borderColor = UIColor.gray.cgColor
         }
     }
     
     private func setupLayout() {
         view.addSubview(logoImageView)
-        view.addSubview(usernameTextField)
+        view.addSubview(userIDTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
 //        view.addSubview(stayLoggedInView)
@@ -164,21 +154,26 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(100)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(48)
             make.width.equalTo(202)
             make.height.equalTo(43.3)
         }
         
-        usernameTextField.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+        signUpButton.snp.makeConstraints { make in
             make.top.equalTo(logoImageView.snp.bottom).offset(100)
+            make.right.equalTo(view).inset(20)
+        }
+        
+        userIDTextField.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(signUpButton.snp.bottom).offset(16)
             make.left.right.equalTo(view).inset(16)
             make.height.equalTo(50)
         }
         
         passwordTextField.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(usernameTextField.snp.bottom).offset(16)
+            make.top.equalTo(userIDTextField.snp.bottom).offset(16)
             make.left.right.equalTo(view).inset(16)
             make.height.equalTo(50)
         }
@@ -189,55 +184,64 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             make.left.right.equalTo(view).inset(16)
             make.height.equalTo(50)
         }
-        
-        signUpButton.snp.makeConstraints { make in
-            make.top.equalTo(loginButton.snp.bottom).offset(19)
-            make.right.equalTo(view).inset(16)
-        }
-        
-//        stayLoggedInView.snp.makeConstraints { make in
-//            make.top.equalTo(loginButton.snp.bottom).offset(24)
-//            make.left.equalTo(view).inset(16)
-//        }
     }
     
     @objc private func loginButtonTapped() {
-        guard let username = usernameTextField.text, !username.isEmpty,
+        guard let userID = userIDTextField.text, !userID.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             print("Username or password cannot be empty")
+            // 여기서 사용자에게 UI 피드백을 주는 것이 좋습니다, 예: 오류 메시지 표시
             return
         }
-        
-        if let user = UserManager.shared.getUser(username: username), user.password == password {
+
+        if let user = UserManager.shared.loadUser(userID: userID), user.password == password {
             print("Login successful")
             UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            proceedToMainInterface()
+            UserDefaults.standard.set(userID, forKey: "currentUserID") // 사용자 ID 저장
+//            proceedToMainInterface()
         } else {
             print("Invalid username or password")
             UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-        }
-    }
-    private func proceedToMainInterface() {
-        let mainViewController = ViewController()  // MainViewController는 메인 인터페이스의 뷰 컨트롤러를 가리킵니다.
-        mainViewController.modalPresentationStyle = .fullScreen
-        present(mainViewController, animated: true)
-    }
-    
-    @objc private func signUpButtonTapped() {
-        DispatchQueue.main.async {
-            self.usernameTextField.resignFirstResponder()
-            self.passwordTextField.resignFirstResponder()
+            // 로그인 실패 시 사용자에게 알림 표시 등의 UI 업데이트를 여기에 추가
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let signUpVC = SignUpViewController()
-            signUpVC.modalPresentationStyle = .fullScreen
-            self.present(signUpVC, animated: true)
+        // 회원가입 후 메인 화면으로 전환
+        if let navigationController = navigationController {
+            let mainViewController = MainViewController()
+            navigationController.pushViewController(mainViewController, animated: true)
+        } else {
+            dismiss(animated: true, completion: nil)
         }
+    }
+
+//    private func proceedToMainInterface() {
+//        // 회원가입 후 메인 화면으로 전환
+//        if let navigationController = navigationController {
+//            let mainViewController = MainViewController()
+//            navigationController.pushViewController(mainViewController, animated: true)
+//        } else {
+//            dismiss(animated: true, completion: nil)
+//        }
+//    }
+
+    @objc private func signUpButtonTapped() {
+        let signUpVC = SignUpViewController()
+        let navController = UINavigationController(rootViewController: signUpVC)
+        
+        // 모달 뷰에 '닫기' 버튼 추가
+        signUpVC.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "닫기", style: .plain, target: self, action: #selector(dismissModal))
+        
+        // 모달 뷰 전체 화면으로 설정
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true)
+    }
+    
+    @objc func dismissModal() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     private func validateLogin() -> Bool {
-        guard let username = usernameTextField.text, !username.isEmpty,
+        guard let username = userIDTextField.text, !username.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             print("Username or password cannot be empty")
             return false
@@ -253,9 +257,15 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        userIDTextField.becomeFirstResponder()
+    }
+
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        view.endEditing(true)  // 키보드 숨김
+        view.endEditing(true)
     }
 }
 

@@ -2,15 +2,6 @@
   "originHash" : "b655d0626b447a81c4afae461c94201cc3c5d645b3a494ba032ff5d6dc49ee81",
   "pins" : [
     {
-      "identity" : "keychain-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/evgenyneu/keychain-swift.git",
-      "state" : {
-        "revision" : "75677d8be3c50898c8ffd0d107f88aa2740301fc",
-        "version" : "22.0.0"
-      }
-    },
-    {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",

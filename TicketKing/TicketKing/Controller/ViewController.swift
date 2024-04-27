@@ -11,6 +11,7 @@ import SDWebImage
 class ViewController: UIViewController {
     
     private var movies: [MovieModel] = []
+    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,6 +50,8 @@ class ViewController: UIViewController {
             stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
         ])
     }
+    
+    
     
     private func fetchMovieData() {
         Task {

@@ -13,14 +13,72 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        // 사용자 정보를 확인
+        if let userID = UserDefaults.standard.string(forKey: "userID") {
+            // 사용자 ID를 찾았을 때의 처리
+            print("User ID found:", userID)
+        } else {
+            // 사용자 ID가 없을 때의 처리
+            print("No user ID found in UserDefaults")
+        }
+        
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        
+//        let loginViewController = ProfileViewController()
+//        let navigationController = UINavigationController(rootViewController: loginViewController)
+        
+        // 탭 바 컨트롤러 생성
+        let tabBarController = UITabBarController()
+        
+        // 첫 번째 탭
+        let mainVC = MainViewController()
+        mainVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "person.fill"), tag: 0)
+        mainVC.view.backgroundColor = .white
+        tabBarController.viewControllers = [UINavigationController(rootViewController: mainVC)]
+        
+        // 두 번째 탭
+        let searchVC = ProfileViewController()
+        searchVC.view.backgroundColor = .white
+        searchVC.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
+        
+        // 세 번째 탭
+        let ticketVC = ExMovieViewController()
+        ticketVC.view.backgroundColor = .white
+        ticketVC.tabBarItem = UITabBarItem(title: "Ticket", image: UIImage(systemName: "bell.fill"), tag: 2)
+        
+        // 네 번째 탭
+        let profileVC = LogInViewController()
+        profileVC.view.backgroundColor = .white
+        profileVC.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "gear"), tag: 3)
+        
+        // 탭 바 컨트롤러에 뷰 컨트롤러 추가
+        tabBarController.viewControllers = [mainVC, searchVC, ticketVC, profileVC]
+        
+        // 탭 바 모양
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.backgroundColor = UIColor(red: 0.075, green: 0.412, blue: 0.4, alpha: 1)
+                
+        // 선택되지 않은 탭 색상
+        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = UIColor.gray
+        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.gray]
+        
+        // 선택 탭 색상
+        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = UIColor.white
+        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        
+        // 모든 탭 바 인스턴스에 적용
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        }
         
         window = UIWindow(windowScene: windowScene)
 //        window?.rootViewController = LogInViewController() // 원하는 뷰컨트롤러로 변경해주기
-        window?.rootViewController = BookingMovieViewController()
+        // window?.rootViewController = BookingMovieViewController()
+        window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
     }
 
