@@ -126,6 +126,12 @@ extension MovieManager {
             throw APIError.decodingError
         }
     }
+    
+    // 특정 영화의 출연진 정보를 가져오는 메서드
+    func fetchCast(for movieId: Int, language: String = "ko-KR") async throws -> [CastMember] {
+        let credits = try await fetchCredits(for: movieId, language: language)
+        return credits.cast
+    }
 
     // 일별, 주차별 인기작 불러옴
     func fetchTrendingMovies(timeWindow: String, language: String = "ko-KR") async throws -> [MovieModel] {

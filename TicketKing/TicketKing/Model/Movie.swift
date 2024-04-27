@@ -123,3 +123,47 @@ struct GenreModel: Codable {
 struct Dates: Codable {
     let maximum, minimum: String
 }
+
+
+struct Video: Codable {
+    let id: Int
+    let results: [VideoModel]
+}
+
+// MARK: - Result
+struct VideoModel: Codable {
+    let iso639_1: National
+    let iso3166_1: Language
+    let name, key: String
+    let site: Site
+    let size: Int
+    let type: TypeEnum
+    let official: Bool
+    let publishedAt, id: String
+
+    enum CodingKeys: String, CodingKey {
+        case iso639_1 = "iso_639_1"
+        case iso3166_1 = "iso_3166_1"
+        case name, key, site, size, type, official
+        case publishedAt = "published_at"
+        case id
+    }
+}
+
+enum Language: String, Codable {
+    case kr = "KR"
+}
+
+enum National: String, Codable {
+    case ko = "ko"
+}
+
+enum Site: String, Codable {
+    case youTube = "YouTube"
+}
+
+enum TypeEnum: String, Codable {
+    case featurette = "Featurette"
+    case teaser = "Teaser"
+    case trailer = "Trailer"
+}
