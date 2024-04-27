@@ -13,7 +13,7 @@ class BookingMovieViewController: UIViewController {
     let screenImageView = UIImageView(image: UIImage(named: "screen"))
     var selectSeatCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
@@ -30,10 +30,13 @@ class BookingMovieViewController: UIViewController {
         return cv
     }()
     
+    let dates = ["4월 22일", "4월 23일", "4월 24일", "4월 25일", "4월 26일"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
         configureUI()
+        
         
         selectSeatCollectionView.delegate = self
         selectSeatCollectionView.dataSource = self
@@ -82,14 +85,19 @@ class BookingMovieViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .white
         
-        selectSeatCollectionView.backgroundColor = .red
+        selectSeatCollectionView.backgroundColor = .clear
         selectSeatCollectionView.register(SelectSeatCollectionViewCell.self, forCellWithReuseIdentifier: SelectSeatCollectionViewCell.identifier)
+        selectSeatCollectionView.allowsMultipleSelection = true
         
         bookingLabel.text = "예약하기"
         bookingLabel.font = .systemFont(ofSize: 17, weight: .regular)
         
-        selectDateCollectionView.backgroundColor = .brown
+        //////////////////////////////////ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ///////////////////////////////////////
+        bookingInfoImageView.isUserInteractionEnabled = true
+        
+        selectDateCollectionView.backgroundColor = .clear
         selectDateCollectionView.register(SelectDateCollectionViewCell.self, forCellWithReuseIdentifier: SelectDateCollectionViewCell.identifier)
+        selectDateCollectionView.allowsSelection = true
     }
 }
 
@@ -103,22 +111,39 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-//        let cell: UICollectionViewCell
 
             if collectionView == selectSeatCollectionView {
                 guard let cell = selectSeatCollectionView.dequeueReusableCell(withReuseIdentifier: SelectSeatCollectionViewCell.identifier, for: indexPath) as? SelectSeatCollectionViewCell else { return UICollectionViewCell() }
-                cell.backgroundColor = .blue
+                cell.backgroundColor = #colorLiteral(red: 0.537254902, green: 0.5058823529, blue: 0.5411764706, alpha: 1)
                 cell.layer.cornerRadius = 5
                 return cell
             } else {
                 guard let cell = selectDateCollectionView.dequeueReusableCell(withReuseIdentifier: SelectDateCollectionViewCell.identifier, for: indexPath) as? SelectDateCollectionViewCell else { return UICollectionViewCell() }
                 
-                cell.backgroundColor = .green
-                cell.layer.cornerRadius = 30
+                cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1) //rgba(220, 240, 238, 1)
+                cell.layer.cornerRadius = 25
+                
+                cell.isUserInteractionEnabled = true
+                // 날짜 선택
+                let datesLabel = UILabel(frame: cell.contentView.bounds)
+                datesLabel.textAlignment = .center
+                datesLabel.text = dates[indexPath.item]
+                datesLabel.numberOfLines = 2
+//                
+////                let buyPoint = UITapGestureRecognizer(target: self, action: #selector(clickPoint(_:)))
+////                datesLabel.isUserInteractionEnabled = true
+////                datesLabel.addGestureRecognizer(buyPoint)
+////    
+                cell.contentView.addSubview(datesLabel)
                 return cell
             }
+        
     }
+    
+    @objc func clickPoint(_ sender: Any) {
+           print("clickPoint")
+       }
+   
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
@@ -128,4 +153,14 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
             return CGSize(width: 54, height: 80)
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if collectionView == selectSeatCollectionView {
+            print("좌석")
+        } else {
+            print("왜안돼")
+        }
+    }
+    
 }
