@@ -35,7 +35,7 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
     }()
     
     private let nameTextField: LabeledTextField = {
-        let textField = LabeledTextField(title: "이름", placeholder: "11조 화이팅!", instructionText: "이름을 입력해주세요.")
+        let textField = LabeledTextField(title: "이름", placeholder: "원성준 최고다!", instructionText: "이름을 입력해주세요.")
         return textField
     }()
     
@@ -79,8 +79,10 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
     }
     private func setupNavigation() {
         self.title = "회원 가입"
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .black
         self.navigationItem.leftBarButtonItem = backButton
+        
     }
     
     @objc func dismissKeyboard() {
@@ -210,15 +212,12 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
         UserManager.shared.saveUser(user: newUser)
         print("User registered successfully")
         
-        // 회원가입 후 메인 화면으로 전환
-        let mainVC = MainViewController()
-            if let navigationController = self.navigationController {
-                navigationController.setViewControllers([mainVC], animated: true)
-            } else {
-                let navController = UINavigationController(rootViewController: mainVC)
-                navController.modalPresentationStyle = .fullScreen
-                self.present(navController, animated: true, completion: nil)
-            }
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? SceneDelegate {
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.set(userID, forKey: "currentUserID")
+            sceneDelegate.setupTabBarController()
+        }
     }
     
     private func isValidPassword(_ password: String) -> Bool {
