@@ -13,10 +13,9 @@ class BuyTicketPageViewController: UIViewController {
     let posterImageView = UIImageView()
     let movieTitleLabel = UILabel()
     let genreLabel = UILabel()
-    let cinemaLabel = UILabel()
     let dateLabel = UILabel()
     let timeLabel = UILabel()
-    lazy var movieInfoStackView = UIStackView(arrangedSubviews: [movieTitleLabel, genreLabel, cinemaLabel, dateLabel, timeLabel])
+    lazy var movieInfoStackView = UIStackView(arrangedSubviews: [movieTitleLabel, genreLabel, dateLabel, timeLabel])
     let payingView = UIImageView(image: UIImage(named: "buyticketpage"))
     
     let bookingNumLabel = UILabel()
@@ -28,24 +27,21 @@ class BuyTicketPageViewController: UIViewController {
     let selectedSeatNumLabel = UILabel()
     lazy var seletedStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
     let separateLineView = UIView()
-    let discountLabel = UILabel()
-    let discountPriceLabel = UILabel()
-    lazy var discountStackView = UIStackView(arrangedSubviews: [discountLabel, discountPriceLabel])
+
     let separateLineView2 = UIView()
     let totalPriceLabel = UILabel()
     let totalPriceWonLabel = UILabel()
     lazy var totalPriceStackView = UIStackView(arrangedSubviews: [totalPriceLabel, totalPriceWonLabel])
-    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, discountStackView, separateLineView2, totalPriceStackView])
+    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, totalPriceStackView, separateLineView2])
     
     let payByLabel = UILabel()
     let payButton = UIButton()
     
     var paymentMethodCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.scrollDirection = .horizontal
-        layout.sectionInset = .zero
-        
+        layout.minimumLineSpacing = 15
+        layout.minimumInteritemSpacing = 50
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
@@ -96,7 +92,7 @@ class BuyTicketPageViewController: UIViewController {
         }
         
     
-        [seletedStackView, discountStackView, totalPriceLabel].forEach { view in
+        [seletedStackView, totalPriceLabel].forEach { view in
             view.snp.makeConstraints { make in
                 make.height.equalTo(60)
             }
@@ -109,13 +105,13 @@ class BuyTicketPageViewController: UIViewController {
         }
         
         bookingInfoStackView.snp.makeConstraints { make in
-            make.top.equalTo(bookingNumStackView.snp.bottom).offset(20)
+            make.top.equalTo(bookingNumStackView.snp.bottom).offset(7)
             make.centerX.equalToSuperview()
             make.width.equalTo(341)
         }
         
         payByLabel.snp.makeConstraints { make in
-            make.top.equalTo(bookingInfoStackView.snp.bottom).offset(38)
+            make.top.equalTo(bookingInfoStackView.snp.bottom).offset(30)
             make.leading.equalToSuperview().offset(27)
         }
         
@@ -129,7 +125,7 @@ class BuyTicketPageViewController: UIViewController {
         payButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-65)
-            make.height.equalTo(58)
+            make.height.equalTo(60)
             make.width.equalTo(344)
         }
     }
@@ -146,10 +142,6 @@ class BuyTicketPageViewController: UIViewController {
         genreLabel.text = "장르"
         genreLabel.textColor = #colorLiteral(red: 0.537254902, green: 0.5058823529, blue: 0.5411764706, alpha: 1) //rgba(137, 129, 138, 1)
         genreLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        
-        cinemaLabel.text = "선택 영화관"
-        cinemaLabel.textColor = .black
-        cinemaLabel.font = .systemFont(ofSize: 15, weight: .semibold)
 
         dateLabel.text = "0000.00.00"
         dateLabel.textColor = .black
@@ -186,14 +178,6 @@ class BuyTicketPageViewController: UIViewController {
         
         separateLineView.backgroundColor = .white
         
-        discountLabel.text = "할인 적용"
-        discountLabel.textColor = .black
-        discountLabel.font = .systemFont(ofSize: 15, weight: .medium)
-        discountPriceLabel.text = " - 000 원"
-        discountPriceLabel.textColor = .black
-        discountPriceLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        discountStackView.axis = .horizontal
-        
         separateLineView2.backgroundColor = .white
         
         totalPriceLabel.text = "총 금액"
@@ -208,6 +192,8 @@ class BuyTicketPageViewController: UIViewController {
         bookingInfoStackView.alignment = .fill
         bookingInfoStackView.backgroundColor = .clear
         
+        
+        payingView.isUserInteractionEnabled = true
         payByLabel.text = "결제방법"
         payByLabel.textColor = .black
         payByLabel.font = .systemFont(ofSize: 17, weight: .semibold)
@@ -239,10 +225,29 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
         // 버튼에 액션 추가
         cell.buttonAction = {
             print("Button tapped at indexPath: \(indexPath)")
+            // 선택된 셀의 인덱스 패스를 저장
+                let selectedIndexPath = indexPath
+                
+                // 모든 셀에 대해 루프를 돌면서 테두리를 설정 혹은 초기화
+            for index in 0..<collectionView.numberOfItems(inSection: indexPath.section) {
+                let indexPath = IndexPath(item: index, section: indexPath.section)
+                if let cell = collectionView.cellForItem(at: indexPath) {
+                    if indexPath == selectedIndexPath {
+                        // 선택된 셀의 경우 테두리 설정
+                        cell.layer.borderWidth = 2.0
+                        cell.layer.borderColor = UIColor.darkGray.cgColor // 테두리 색상 설정
+                        cell.layer.cornerRadius = 5.0 // 테두리의 모서리를 둥글게 만듭니다. 선택사항입니다.
+                    } else {
+                        // 선택되지 않은 셀의 경우 테두리 초기화
+                        cell.layer.borderWidth = 0.0
+                        cell.layer.borderColor = nil
+                        cell.layer.cornerRadius = 0.0
+                    }
+                }
+            }
         }
         
         return cell
     }
-    
 }
     

@@ -9,7 +9,9 @@ import UIKit
 import SnapKit
 
 class BookingMovieViewController: UIViewController {
-
+    let dates = ["4월 29일", "4월 30일", "5월  1일", "5월  2일", "5월 3일", "5월 4일", "5월 6일", "5월  7일"]
+    let times = ["09 : 00", "11 : 30", "13 : 00", "15 : 30", "18 : 00", "20 : 30", "23 : 00"]
+    
     let screenImageView = UIImageView(image: UIImage(named: "screen"))
     var selectSeatCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -25,24 +27,36 @@ class BookingMovieViewController: UIViewController {
     var selectDateCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        layout.scrollDirection = .horizontal
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
     
-    let dates = ["4월 22일", "4월 23일", "4월 24일", "4월 25일", "4월 26일"]
+    var selectTimeCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        layout.scrollDirection = .horizontal
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return cv
+    }()
+    
+    let lineView = UIView()
+    let totalPriceLabel = UILabel()
+    let totalPriceWonLabel = UILabel()
+    let moveToPayentPageButton = UIButton()
+  
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraints()
         configureUI()
-        
-        
         selectSeatCollectionView.delegate = self
         selectSeatCollectionView.dataSource = self
-        
         selectDateCollectionView.dataSource = self
         selectDateCollectionView.delegate = self
+        selectTimeCollectionView.dataSource = self
+        selectTimeCollectionView.delegate = self
     }
     
     func setupConstraints() {
@@ -51,7 +65,11 @@ class BookingMovieViewController: UIViewController {
         view.addSubview(bookingInfoImageView)
         bookingInfoImageView.addSubview(bookingLabel)
         bookingInfoImageView.addSubview(selectDateCollectionView)
-        
+        bookingInfoImageView.addSubview(selectTimeCollectionView)
+        bookingInfoImageView.addSubview(lineView)
+        bookingInfoImageView.addSubview(totalPriceLabel)
+        bookingInfoImageView.addSubview(totalPriceWonLabel)
+        bookingInfoImageView.addSubview(moveToPayentPageButton)
         
         screenImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(100)
@@ -80,6 +98,34 @@ class BookingMovieViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-27)
             make.height.equalTo(80)
         }
+        
+        selectTimeCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(selectDateCollectionView.snp.bottom).offset(25)
+            make.leading.equalToSuperview().offset(25)
+            make.trailing.equalToSuperview().offset(-25)
+            make.height.equalTo(42)
+        }
+        
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(selectTimeCollectionView.snp.bottom).offset(31)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(352)
+            make.height.equalTo(1)
+        }
+        totalPriceLabel.snp.makeConstraints { make in
+            make.top.equalTo(lineView.snp.bottom).offset(28)
+            make.leading.equalToSuperview().offset(24)
+        }
+        totalPriceWonLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(totalPriceLabel.snp.centerY)
+            make.trailing.equalToSuperview().offset(-24)
+        }
+        moveToPayentPageButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.snp.bottom).offset(-65)
+            make.height.equalTo(58)
+            make.width.equalTo(344)
+        }
     }
 
     func configureUI() {
@@ -90,7 +136,7 @@ class BookingMovieViewController: UIViewController {
         selectSeatCollectionView.allowsMultipleSelection = true
         
         bookingLabel.text = "예약하기"
-        bookingLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        bookingLabel.font = .systemFont(ofSize: 17, weight: .bold)
         
         //////////////////////////////////ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ///////////////////////////////////////
         bookingInfoImageView.isUserInteractionEnabled = true
@@ -98,16 +144,46 @@ class BookingMovieViewController: UIViewController {
         selectDateCollectionView.backgroundColor = .clear
         selectDateCollectionView.register(SelectDateCollectionViewCell.self, forCellWithReuseIdentifier: SelectDateCollectionViewCell.identifier)
         selectDateCollectionView.allowsSelection = true
+        
+        selectTimeCollectionView.backgroundColor = .clear
+        selectTimeCollectionView.register(SelectTimeCollectionViewCell.self, forCellWithReuseIdentifier: SelectTimeCollectionViewCell.identifier)
+        selectTimeCollectionView.allowsSelection = true
+        
+        lineView.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
+        totalPriceLabel.text = "총 금액"
+        totalPriceLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        totalPriceWonLabel.text = "000원"
+        totalPriceWonLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        moveToPayentPageButton.backgroundColor = #colorLiteral(red: 0.9137254902, green: 0.1490196078, blue: 0.1725490196, alpha: 1)
+        moveToPayentPageButton.setTitle("결제창 이동", for: .normal)
+        moveToPayentPageButton.layer.cornerRadius = 5
+        moveToPayentPageButton.addTarget(self, action: #selector(moveToPayentPageButtonClicked), for: .touchUpInside)
     }
+    
+    @objc func moveToPayentPageButtonClicked() {
+        print("clicked button")
+        let buyTicketPageViewController = BuyTicketPageViewController()
+//        navigationController?.pushViewController(buyTicketPageViewController, animated: true) //navigationController 연결시
+        buyTicketPageViewController.modalPresentationStyle = .fullScreen
+        present(buyTicketPageViewController, animated: true, completion: nil)
+    }
+ 
 }
+
+
 
 extension BookingMovieViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == selectSeatCollectionView {
             return 35
-        } else {
-            return 5
+        } 
+        else if collectionView == selectDateCollectionView {
+            return dates.count
         }
+        else if collectionView == selectTimeCollectionView {
+            return times.count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -117,50 +193,73 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
                 cell.backgroundColor = #colorLiteral(red: 0.537254902, green: 0.5058823529, blue: 0.5411764706, alpha: 1)
                 cell.layer.cornerRadius = 5
                 return cell
-            } else {
+            } 
+            else if collectionView == selectDateCollectionView {
                 guard let cell = selectDateCollectionView.dequeueReusableCell(withReuseIdentifier: SelectDateCollectionViewCell.identifier, for: indexPath) as? SelectDateCollectionViewCell else { return UICollectionViewCell() }
                 
                 cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1) //rgba(220, 240, 238, 1)
                 cell.layer.cornerRadius = 25
                 
-                cell.isUserInteractionEnabled = true
-                // 날짜 선택
+               
                 let datesLabel = UILabel(frame: cell.contentView.bounds)
                 datesLabel.textAlignment = .center
                 datesLabel.text = dates[indexPath.item]
                 datesLabel.numberOfLines = 2
-//                
-////                let buyPoint = UITapGestureRecognizer(target: self, action: #selector(clickPoint(_:)))
-////                datesLabel.isUserInteractionEnabled = true
-////                datesLabel.addGestureRecognizer(buyPoint)
-////    
+
                 cell.contentView.addSubview(datesLabel)
                 return cell
             }
+            else if collectionView == selectTimeCollectionView {
+                guard let cell = selectTimeCollectionView.dequeueReusableCell(withReuseIdentifier: SelectTimeCollectionViewCell.identifier, for: indexPath) as? SelectTimeCollectionViewCell else { return UICollectionViewCell() }
+                cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1) //rgba(220, 240, 238, 1)
+                cell.layer.cornerRadius = 5
+                
+                let timeLabel = UILabel(frame: cell.contentView.bounds)
+                timeLabel.textAlignment = .center
+                timeLabel.text = times[indexPath.item]
+                timeLabel.numberOfLines = 1
+                cell.contentView.addSubview(timeLabel)
+                return cell
+            }
+            return UICollectionViewCell()
         
     }
-    
-    @objc func clickPoint(_ sender: Any) {
-           print("clickPoint")
-       }
-   
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         if collectionView == selectSeatCollectionView {
             return CGSize(width: 38, height: 30)
-        } else {
+        } 
+        else if collectionView == selectDateCollectionView {
             return CGSize(width: 54, height: 80)
         }
+        else if collectionView == selectTimeCollectionView {
+            return CGSize(width: 76, height: 42)
+        }
+        return CGSize(width: 0, height: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if collectionView == selectSeatCollectionView {
-            print("좌석")
-        } else {
-            print("왜안돼")
+            print("좌석 \(indexPath.item)")
+        } 
+        else if collectionView == selectDateCollectionView {
+            print(dates[indexPath.item])
         }
+        else if collectionView == selectTimeCollectionView {
+            print(times[indexPath.item])
+        }
+    }
+    
+    // 좌석셀 간격
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        8
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        8
     }
     
 }
