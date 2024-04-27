@@ -60,24 +60,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         return relesedTitle
     }()
     
-    //더보기버튼
-    let seeAllMovies: UIButton = {
-        let moreFilms = UIButton()
-        moreFilms.setTitle("더보기>>", for: .normal)
-        moreFilms.setTitleColor(UIColor(named: "kRed"), for: .normal)
-        moreFilms.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        return moreFilms
-    }()
-    
-    //상영예정 더보기버튼
-    let seeUpComingMovies: UIButton = {
-        let moreFilms = UIButton()
-        moreFilms.setTitle("더보기>>", for: .normal)
-        moreFilms.setTitleColor(UIColor(named: "kRed"), for: .normal)
-        moreFilms.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        return moreFilms
-    }()
-    
     
     
     
@@ -100,8 +82,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         myimage.addSubview(person) // person을 추가합니다.
         view.addSubview(title1)
         view.addSubview(title2)
-        view.addSubview(seeAllMovies)
-        view.addSubview(seeUpComingMovies)
         autoLayout()
     }
     
@@ -224,7 +204,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func configurereleasedMovieViewConstaint() {
         releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 140), // 원하는 Y 좌표로 설정
+            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 120), // 원하는 Y 좌표로 설정
             releasedMovieView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             releasedMovieView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
             releasedMovieView.heightAnchor.constraint(equalToConstant: 400) // 원하는 높이로 설정
@@ -235,10 +215,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func configureComingUpMovieViewConstaint() {
         comingUpMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            comingUpMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 615), // 원하는 Y 좌표로 설정
+            comingUpMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 555), // 원하는 Y 좌표로 설정
             comingUpMovieView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             comingUpMovieView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            comingUpMovieView.heightAnchor.constraint(equalToConstant: 145) // 화면에 보여질 높이 설정
+            comingUpMovieView.heightAnchor.constraint(equalToConstant: 195) // 화면에 보여질 높이 설정
         ])
     }
     
@@ -264,25 +244,13 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         title2.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            title2.topAnchor.constraint(equalTo: view.topAnchor, constant: 578),
+            title2.topAnchor.constraint(equalTo: view.topAnchor, constant: 525),
             title2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             title2.widthAnchor.constraint(equalToConstant: 74),
             title2.heightAnchor.constraint(equalToConstant: 22)
         ])
         
-        seeAllMovies.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            seeAllMovies.topAnchor.constraint(equalTo: view.topAnchor, constant: 144),
-            seeAllMovies.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 304),
-            seeAllMovies.heightAnchor.constraint(equalToConstant: 22)
-        ])
-        
-        seeUpComingMovies.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            seeUpComingMovies.topAnchor.constraint(equalTo: view.topAnchor, constant: 578),
-            seeUpComingMovies.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 304),
-            seeUpComingMovies.heightAnchor.constraint(equalToConstant: 22)
-        ])
+    
         
         // 튜플에서 두 개의 뷰를 추출합니다.
         let (myimage, person) = profileImage
@@ -297,10 +265,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         // person의 오토레이아웃을 설정합니다.
         person.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            person.topAnchor.constraint(equalTo: myimage.topAnchor, constant: 5), // myimage의 상단에 맞춤
-            person.leadingAnchor.constraint(equalTo: myimage.leadingAnchor, constant: 5), // myimage의 왼쪽에 맞추고 간격 추가
-            person.trailingAnchor.constraint(equalTo: myimage.trailingAnchor, constant: -5), // myimage의 오른쪽에 맞추고 간격 추가
-            person.bottomAnchor.constraint(equalTo: myimage.bottomAnchor, constant: -5) // myimage의 하단에 맞춤
+            person.topAnchor.constraint(equalTo: myimage.topAnchor, constant: 7), // myimage의 상단에 맞춤
+            person.leadingAnchor.constraint(equalTo: myimage.leadingAnchor, constant: 7), // myimage의 왼쪽에 맞추고 간격 추가
+            person.trailingAnchor.constraint(equalTo: myimage.trailingAnchor, constant: -7), // myimage의 오른쪽에 맞추고 간격 추가
+            person.bottomAnchor.constraint(equalTo: myimage.bottomAnchor, constant: -7) // myimage의 하단에 맞춤
         ])
     }
     
