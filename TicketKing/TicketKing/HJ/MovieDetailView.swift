@@ -217,15 +217,28 @@ class MovieDetailView: UIViewController, UICollectionViewDataSource, UICollectio
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configureNavigationBarItems()
+        checkFavoriteStatusAndUpdateHeart()
     }
 
     private func configureNavigationBarItems() {
 
         let backItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backItem.tintColor = .kBlack
         navigationItem.leftBarButtonItem = backItem
         let heartItem = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(toggleHeart))
         heartItem.tintColor = .red
         navigationItem.rightBarButtonItem = heartItem
+    }
+    
+    private func checkFavoriteStatusAndUpdateHeart() {
+        guard let movieId = movie?.id, let userID = UserDefaults.standard.string(forKey: "currentUserID"),
+              let user = UserManager.shared.loadUser(userID: userID) else {
+            print("Failed to load user profile or movie data is missing")
+            return
+        }
+
+        isHeartFilled = user.favoriteMovies.contains(String(movieId))
+        updateHeartIcon()
     }
     
     private func configureNavigationBar() {
@@ -235,15 +248,34 @@ class MovieDetailView: UIViewController, UICollectionViewDataSource, UICollectio
         navigationController?.view.backgroundColor = .clear
     }
     
-    @objc private func toggleHeart() {
-        // 하트 상태 토글
-        isHeartFilled.toggle()
-        
-        // 아이콘 업데이트
-        let heartIconName = isHeartFilled ? "heart.fill" : "heart"
-        let heartIcon = UIImage(systemName: heartIconName)?.withRenderingMode(.alwaysOriginal)
-        navigationItem.rightBarButtonItem?.image = heartIcon
-    }
+//    @objc private func toggleHeart() {
+//        guard let movieId = movie?.id else { return }
+//
+//        // 하트 상태 토글
+//        isHeartFilled.toggle()
+//
+//        // 사용자 정보 로드
+//        guard let userID = UserDefaults.standard.string(forKey: "currentUserID"),
+//              var user = UserManager.shared.loadUser(userID: userID) else {
+//            print("Failed to load user profile")
+//            return
+//        }
+//
+//        // 즐겨찾기 목록 업데이트
+//        if isHeartFilled {
+//            user.favoriteMovies.append(String(movieId))
+//        } else {
+//            user.favoriteMovies.removeAll { $0 == String(movieId) }
+//        }
+//
+//        // 변경된 사용자 정보 저장
+//        UserManager.shared.saveUser(user: user)
+//
+//        // 아이콘 업데이트
+//        let heartIconName = isHeartFilled ? "heart.fill" : "heart"
+//        let heartIcon = UIImage(systemName: heartIconName)?.withRenderingMode(.alwaysOriginal)
+//        navigationItem.rightBarButtonItem?.image = heartIcon
+//    }
     
     private func loadData() {
         guard let movie = movie else { return }
@@ -311,6 +343,37 @@ class MovieDetailView: UIViewController, UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 160, height: 200)
+    }
+}
+
+extension MovieDetailView {
+    @objc private func toggleHeart() {
+        guard let movie = movie, let userID = UserDefaults.standard.string(forKey: "currentUserID"),
+              var user = UserManager.shared.loadUser(userID: userID) else {
+            print("Failed to load user profile or movie data is missing")
+            return
+        }
+
+        isHeartFilled.toggle()
+
+        if isHeartFilled {
+            user.favoriteMovies.append(String(movie.id))
+            print("Added to favorites: Movie ID \(movie.id)")
+        } else {
+            user.favoriteMovies.removeAll { $0 == String(movie.id) }
+            print("Removed from favorites: Movie ID \(movie.id)")
+        }
+
+        UserManager.shared.saveUser(user: user)
+        print("Current favorite movies: \(user.favoriteMovies)")
+
+        updateHeartIcon()
+    }
+
+    private func updateHeartIcon() {
+        let heartIconName = isHeartFilled ? "heart.fill" : "heart"
+        let heartIcon = UIImage(systemName: heartIconName)?.withRenderingMode(.alwaysOriginal)
+        navigationItem.rightBarButtonItem?.image = heartIcon
     }
 }
 

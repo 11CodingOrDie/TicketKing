@@ -11,10 +11,11 @@ import SnapKit
 class ProfileViewTableViewCell: UITableViewCell {
 
     private let container = UIView()
-    private var profileViewCell: MovieInfoCell?
+    private var movieInfoCell: MovieInfoCell?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupContainerView()
         setupMovieInfoCell()
     }
     
@@ -36,15 +37,15 @@ class ProfileViewTableViewCell: UITableViewCell {
     }
     
     private func setupMovieInfoCell() {
-        profileViewCell = MovieInfoCell(frame: .zero)
-        guard let profileViewCell = profileViewCell else { return }
-        container.addSubview(profileViewCell)
-        profileViewCell.snp.makeConstraints { make in
+        movieInfoCell = MovieInfoCell(frame: .zero)
+        guard let movieInfoCell = movieInfoCell else { return }
+        container.addSubview(movieInfoCell)
+        movieInfoCell.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
     
-    func configure(with movie: MovieModel) {
-        profileViewCell?.configure(with: movie)
+    func configure(with movie: MovieDetails) {
+        movieInfoCell?.configure(with: movie)
     }
 }

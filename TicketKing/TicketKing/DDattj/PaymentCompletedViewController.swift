@@ -200,6 +200,24 @@ class PaymentCompletedViewController: UIViewController {
         return image
     }()
     
+//    let totalPriceWonLabel: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 15)
+//        label.textColor = .kBlack
+//        return label
+//    }()
+    
+    var bookingData: SavedBookingData?
+    var movie: MovieModel?
+    var selectedDate: String?
+    var selectedTime: String?
+    var selectedSeats: [String] = [] {
+        didSet {
+            subTitle6.text = "\(selectedSeats.count * 10000) 원"
+
+        }
+    }
+    
     //MARK: - 기능 구현
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -228,7 +246,7 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(price)
 //        view.addSubview(subTitle7)
         setupNavigation()
-        
+        displayBookingDetails()
         AutoLayoutD()
         AutoLayout()
         displayBookingDetails()
@@ -257,6 +275,7 @@ class PaymentCompletedViewController: UIViewController {
             moviePrice.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
     }
+
     
     
     private func setupNavigation() {

@@ -30,23 +30,44 @@ class MovieViewController: UIViewController {
         searchBar.delegate = self
         setupThirdCollectionView()
         addMoviesToCollectionView()
-        fetchAllMovies()
+        loadPopularMovies()
         setSearchBar()
         autoLayout()
+        closeKeyboard()
+        
+        // 네비게이션 바 투명 처리
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
     }
 
     
     //전체데이터 가지고 오기
-    private func fetchAllMovies(language: String = "ko-KR", page: Int = 1) {
+    private func searchMovies(query: String, page: Int = 1, language: String = "ko-KR") {
         Task {
             do {
-                let moviesList = try await MovieManager.shared.fetchPopularMovies(page: page, language: language)
+                // searchMovies는 비동기 함수로 변경되었으므로 await을 사용
+                let moviesList = try await MovieManager.shared.searchMovies(query: query, page: page, language: language)
                 self.searchMovies = moviesList
                 DispatchQueue.main.async {
                     self.thirdCollectionView.reloadData()
                 }
             } catch {
-                print("Error fetching all movies: \(error)")
+                print("Error fetching movies: \(error)")
+            }
+        }
+    }
+    
+    private func loadPopularMovies(page: Int = 1, language: String = "ko-KR") {
+        Task {
+            do {
+                let popularMovies = try await MovieManager.shared.fetchPopularMovies(page: page, language: language)
+                self.searchMovies = popularMovies
+                DispatchQueue.main.async {
+                    self.thirdCollectionView.reloadData()
+                }
+            } catch {
+                print("Error fetching popular movies: \(error)")
             }
         }
     }
@@ -62,11 +83,15 @@ class MovieViewController: UIViewController {
     private func setupThirdCollectionView() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        thirdCollectionView.register(thirdCollectionViewCell.self, forCellWithReuseIdentifier: thirdCollectionViewCell.identifier)
+        thirdCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        thirdCollectionView.register(thirdCollectionViewCell.self, forCellWithReuseIdentifier: "thirdCollectionViewCell")
         thirdCollectionView.dataSource = self
         thirdCollectionView.delegate = self
         view.addSubview(thirdCollectionView)
     }
+    
+    
+    
     
     private func autoLayout() {
         //서치창 콜렉션뷰 오토레이아웃
@@ -92,7 +117,7 @@ class MovieViewController: UIViewController {
         //삭제 아이콘 넣기
         searchBar.setImage(UIImage(named: "iCancel"), for: .clear, state: .normal)
         // 서치바의 프레임 설정
-        searchBar.frame = CGRect(x: 25, y: 116, width: 342, height: 53)
+        searchBar.frame = CGRect(x: 25, y: 100, width: 342, height: 53)
         self.view.addSubview(searchBar)
         
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
@@ -116,14 +141,20 @@ class MovieViewController: UIViewController {
             closeKeyboard()
         }
     }
-    func closeKeyboard() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
-    }
+//    func closeKeyboard() {
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        self.view.addGestureRecognizer(tapGesture)
+//    }
     
     @objc func dismissKeyboard() {
         // 서치바에서 포커스를 해제하여 키보드를 내림
         searchBar.resignFirstResponder()
+    }
+    
+    func closeKeyboard() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false  // Ensure it doesn't cancel other touch events
+        view.addGestureRecognizer(tapGesture)
     }
   
 }
@@ -131,46 +162,71 @@ class MovieViewController: UIViewController {
 extension MovieViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     //각 뷰에 보여질 정보 연결
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
+        
         return searchMovies.count
     }
     
     //각 콜렉션뷰와 콜렉션셀 연결해주기
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thirdCollectionViewCell", for: indexPath) as? thirdCollectionViewCell else {
             fatalError("Unable to dequeue thirdCollectionViewCell")
         }
-        cell.configure(with: searchMovies[indexPath.row])
+        cell.configure(with: searchMovies[indexPath.item])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedMovie = searchMovies[indexPath.row]
+        let detailViewController = MovieDetailView()
+        detailViewController.movie = selectedMovie
+        
+        let navigationController = UINavigationController(rootViewController: detailViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
     }
     
     // 콜렉션뷰 셀 크기 설정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 111, height: 200)
     }
+    
+    
+    
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+           let selectedMovie = searchMovies[indexPath.row]
+           let detailViewController = MovieDetailView()
+           detailViewController.movie = selectedMovie  // 영화 정보 전달
+
+           let navigationController = UINavigationController(rootViewController: detailViewController)
+
+           // 모달 뷰 전체 화면으로 설정
+           navigationController.modalPresentationStyle = .fullScreen
+
+           // 현재 뷰 컨트롤러에서 모달 방식으로 네비게이션 컨트롤러 표시
+           present(navigationController, animated: true)
+       }
 }
+
+
+
 
 extension MovieViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            // 검색어가 비어있으면 전체 영화 목록을 표시
-            fetchAllMovies()
+            loadPopularMovies()
         } else {
-            // 검색어가 포함된 영화들만 필터링하여 업데이트
-            let filteredMovies = searchMovies.filter { $0.title.range(of: searchText, options: .caseInsensitive) != nil }
-            self.searchMovies = filteredMovies
-            for movie in searchMovies {
-                print("movie.title: \(movie.title)")
-            }
-            
-            thirdCollectionView.reloadData()
+            searchMovies(query: searchText)  // 검색어에 맞는 영화만 표시
         }
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         // 검색 버튼을 눌렀을 때 키보드를 닫음
-        print("검색")
+        if let searchText = searchBar.text, !searchText.isEmpty {
+            searchMovies(query: searchText)
+        }
         searchBar.resignFirstResponder()
     }
 }
+

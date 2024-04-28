@@ -38,7 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // 첫 번째 탭: 메인 뷰 컨트롤러
         let mainVC = MainViewController()
-        mainVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house"), tag: 0)
+        mainVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house.circle"), tag: 0)
         
         // 두 번째 탭: 검색 뷰 컨트롤러
         let searchVC = MovieViewController()
@@ -65,6 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window?.rootViewController = tabBarController
     }
+    
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
