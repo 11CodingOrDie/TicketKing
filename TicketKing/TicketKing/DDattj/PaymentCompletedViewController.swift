@@ -273,9 +273,7 @@ class PaymentCompletedViewController: UIViewController {
             moviePrice.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
     }
-    
-    
-    
+
     private func setupNavigation() {
         self.title = "예매내역"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white] // 타이틀 색상 변경
@@ -285,14 +283,13 @@ class PaymentCompletedViewController: UIViewController {
     }
     
     @objc func goMainTapped() {
-        //        dismiss(animated: true, completion: nil)
-        
+        self.view.window?.rootViewController?.dismiss(animated: true, completion: {
+            if let tabBar = self.view.window?.rootViewController as? UITabBarController {
+                tabBar.selectedIndex = 0 // 탭바 인덱스!@
+            }
+        })
     }
-    
-    
-    
-    
-    
+
     
     func AutoLayout() {
         

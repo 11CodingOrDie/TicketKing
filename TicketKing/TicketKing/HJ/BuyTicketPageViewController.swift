@@ -67,6 +67,42 @@ class BuyTicketPageViewController: UIViewController {
         }
     }
     
+    @objc func saveMoviePaymentInfo() {
+        guard let movie = movie else {
+            print("영화 정보가 없습니다.")
+            return
+        }
+
+        // UserDefaults 객체를 가져옵니다.
+        let defaults = UserDefaults.standard
+        
+        // 영화 제목, 포스터 URL, 날짜, 시간을 UserDefaults에 저장합니다.
+        defaults.set(movie.title, forKey: "movieTitle")
+        defaults.set("https://image.tmdb.org/t/p/w500\(movie.posterPath)", forKey: "moviePosterURL")
+        defaults.set(selectedDate, forKey: "selectedDate")
+        defaults.set(selectedTime, forKey: "selectedTime")
+        print("영화 정보 저장: 제목=\(movie.title), 포스터 URL=\(movie.posterPath), 날짜=\(selectedDate ?? "N/A"), 시간=\(selectedTime ?? "N/A")")
+
+        // 저장된 영화 정보를 로그로 확인합니다.
+        debugMoviePaymentInfo()
+    }
+
+    func debugMoviePaymentInfo() {
+        let defaults = UserDefaults.standard
+        if let title = defaults.string(forKey: "movieTitle"),
+           let posterURL = defaults.string(forKey: "moviePosterURL"),
+           let date = defaults.string(forKey: "selectedDate"),
+           let time = defaults.string(forKey: "selectedTime") {
+            print("저장된 영화 제목: \(title)")
+            print("저장된 포스터 URL: \(posterURL)")
+            print("저장된 날짜: \(date)")
+            print("저장된 시간: \(time)")
+        } else {
+            print("저장된 영화 정보를 찾을 수 없습니다.")
+        }
+    }
+
+    
     private func displayBookingDetails() {
         if let movie = movie {
             movieTitleLabel.text = movie.title
@@ -176,6 +212,9 @@ class BuyTicketPageViewController: UIViewController {
     
     // 예매된 영화 티켓 화면으로 이동하는 navi
     @objc func MoveToPaymentCompletedTapped() {
+        print("결제하기 버튼이 눌렸습니다.")
+        saveMoviePaymentInfo()
+        
         let paymentCompltedVC = PaymentCompletedViewController()
         paymentCompltedVC.movie = movie
         paymentCompltedVC.selectedDate = selectedDate
@@ -267,8 +306,6 @@ class BuyTicketPageViewController: UIViewController {
     }
 }
 
-
-
 extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         images.count
@@ -303,9 +340,7 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
                     }
                 }
             }
-           
         }
-        
         return cell
     }
 }

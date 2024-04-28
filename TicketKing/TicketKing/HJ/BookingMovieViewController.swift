@@ -143,7 +143,7 @@ class BookingMovieViewController: UIViewController {
         
         var currentDate = start > today ? start : today  // 시작 날짜가 오늘보다 이전이면 오늘로 설정
         while currentDate <= end {
-            dateFormatter.dateFormat = "MM월\ndd일"  // 날짜 형식 변경
+            dateFormatter.dateFormat = "MM월 dd일"  // 날짜 형식 변경
             let formattedDate = dateFormatter.string(from: currentDate)
             availableDates.append(formattedDate)
             currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
