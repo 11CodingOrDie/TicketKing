@@ -59,6 +59,7 @@ class BuyTicketPageViewController: UIViewController {
         setupConstraints()
         configureUI()
         displayBookingDetails()
+        setupNavigation()
         
         paymentMethodCollectionView.delegate = self
         paymentMethodCollectionView.dataSource = self
@@ -85,6 +86,19 @@ class BuyTicketPageViewController: UIViewController {
             totalPriceWonLabel.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
     }
+    
+    // 네비게이션 backbutton 과 네비게이션 타이틀
+    private func setupNavigation() {
+        self.title = "결제 확인"
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .black
+        self.navigationItem.leftBarButtonItem = backButton
+        
+    }
+    
+    @objc func backButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
+    }
 
     
     func setupConstraints() {
@@ -107,6 +121,7 @@ class BuyTicketPageViewController: UIViewController {
         movieInfoStackView.snp.makeConstraints { make in
             make.centerY.equalTo(posterImageView)
             make.leading.equalTo(posterImageView.snp.trailing).offset(20)
+            make.trailing.equalToSuperview().offset(20)
         }
         
         payingView.snp.makeConstraints { make in
