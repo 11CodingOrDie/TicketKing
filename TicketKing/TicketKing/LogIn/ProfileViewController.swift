@@ -264,6 +264,8 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
                 UserDefaults.standard.set(filename, forKey: "profileImageFilename_\(userID)")
                 profileImageView.image = UIImage(data: data)
                 print("Image saved at: \(fileURL)")
+                
+                NotificationCenter.default.post(name: .profileImageUpdated, object: nil)
             } catch {
                 print("Error saving image: \(error)")
             }

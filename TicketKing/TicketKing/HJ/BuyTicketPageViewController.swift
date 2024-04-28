@@ -28,7 +28,6 @@ class BuyTicketPageViewController: UIViewController {
     let bookingRamdomNumLabel = UILabel()
     lazy var bookingNumStackView = UIStackView(arrangedSubviews: [bookingNumLabel, bookingRamdomNumLabel])
     
-
     let selectedSeatLabel = UILabel()
     let selectedSeatNumLabel = UILabel()
     lazy var seletedStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
