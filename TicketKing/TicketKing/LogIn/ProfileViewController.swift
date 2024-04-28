@@ -24,7 +24,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         let imageView = UIImageView(image: UIImage(systemName: "person")) // 기본 이미지 설정
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 36
+        imageView.layer.cornerRadius = 10
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -40,6 +40,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .gray
         return label
     }()
     
@@ -51,9 +52,18 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     private let logoutButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("로그아웃", for: .normal)
-        button.setTitleColor(.red, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        // 'arrow.right.square'는 예시로 사용된 SF Symbols의 아이콘입니다. 적절한 아이콘으로 교체해야 합니다.
+        let iconImage = UIImage(systemName: "rectangle.portrait.and.arrow.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .regular))
+        button.setImage(iconImage, for: .normal)
+        button.tintColor = UIColor(named: "kRed")  // 아이콘 색상 설정
+
+        button.backgroundColor = .white  // 배경색 설정
+        button.layer.cornerRadius = 10   // 코너 레디우스 설정
+        button.clipsToBounds = true
+        
+//        // 버튼의 크기 설정
+//        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        
         return button
     }()
     
@@ -62,6 +72,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         view.backgroundColor = .white
         navigationItem.hidesBackButton = true
         setupLayout()
+        setupNavigation()
         
         logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
         loadUserProfile()
@@ -71,8 +82,15 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
             print("No user ID found in UserDefaults")
         }
         changeImageButton.addTarget(self, action: #selector(changeImageTapped), for: .touchUpInside)
+        
+        
     }
     
+    private func setupNavigation() {
+        self.title = "마이 페이지"
+        
+    }
+ 
     private func setupLayout() {
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
@@ -81,9 +99,9 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         view.addSubview(logoutButton)
         
         profileImageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(24)
-            make.leading.equalTo(view.snp.leading).offset(16)
-            make.width.height.equalTo(70)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
+            make.leading.equalTo(view.snp.leading).offset(24)
+            make.width.height.equalTo(66)
         }
         
         nameLabel.snp.makeConstraints { make in
@@ -92,7 +110,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.bottom).offset(8)
+            make.top.equalTo(nameLabel.snp.bottom).offset(4)
             make.leading.equalTo(nameLabel.snp.leading)
         }
         
@@ -102,8 +120,8 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
         
         logoutButton.snp.makeConstraints { make in
-            make.top.equalTo(nameLabel.snp.top)
-            make.trailing.equalTo(view.snp.trailing).offset(-16)
+            make.top.equalTo(profileImageView.snp.top).offset(6)
+            make.trailing.equalTo(view.snp.trailing).offset(-20)
         }
         
         setupSegmentControl()
