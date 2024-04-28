@@ -24,7 +24,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let tableView = UITableView()
         return tableView
     }()
-    //    var movieSelect: ((MovieModel) -> Void)? //콜백함수..?
     
     // 브랜드 로고 넣기
     let brandLogo: UIImageView = {
@@ -195,6 +194,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
            // 현재 뷰 컨트롤러에서 모달 방식으로 네비게이션 컨트롤러 표시
            present(navigationController, animated: true)
        }
+    
+    
     
     //셀 사이즈 지정
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
