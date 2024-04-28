@@ -131,14 +131,6 @@ class PaymentCompletedViewController: UIViewController {
         return image
     }()
     
-    let Title: UILabel = {
-        let label = UILabel()
-        label.text = "예매내역"
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .white
-        return label
-    }()
-    
     let subTitle1: UILabel = {
         let label = UILabel()
         label.text = "영화관"
@@ -195,6 +187,11 @@ class PaymentCompletedViewController: UIViewController {
         return label
     }()
     
+    let barCode: UIImageView = {
+        let image = UIImageView(image: UIImage(named: "barcode"))
+        return image
+    }()
+    
     //MARK: - 기능 구현
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -212,7 +209,7 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(moviePrice)
         view.addSubview(movieNo)
         
-        view.addSubview(Title)
+        view.addSubview(barCode)
         view.addSubview(logoS)
         view.addSubview(backButton)
         view.addSubview(subTitle1)
@@ -222,13 +219,49 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(subTitle5)
         view.addSubview(subTitle6)
         view.addSubview(subTitle7)
+        setupNavigation()
         
         AutoLayoutD()
         AutoLayout()
     }
     
+    
+    
+    
+    private func setupNavigation() {
+        self.title = "예매내역"
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .white
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    @objc func backButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    
     func AutoLayout() {
+        
+        movieBackground.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            movieBackground.topAnchor.constraint(equalTo: view.topAnchor),
+            movieBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            
+        ])
 
+        movieThumbnail.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            movieThumbnail.topAnchor.constraint(equalTo: view.topAnchor, constant: 154),
+            movieThumbnail.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
+            movieThumbnail.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60),
+            movieThumbnail.heightAnchor.constraint(equalToConstant: 139)
+            
+        ])
+        
         movieTitle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 312),
@@ -295,20 +328,14 @@ class PaymentCompletedViewController: UIViewController {
             logoS.heightAnchor.constraint(equalToConstant: 30)
         ])
         
-        backButton.translatesAutoresizingMaskIntoConstraints = false
+        barCode.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 785),
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 128),
-            backButton.widthAnchor.constraint(equalToConstant: 138),
-            backButton.heightAnchor.constraint(equalToConstant: 30)
+            barCode.topAnchor.constraint(equalTo: view.topAnchor, constant: 643),
+            barCode.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            barCode.widthAnchor.constraint(equalToConstant: 230),
+            barCode.heightAnchor.constraint(equalToConstant: 83)
         ])
         
-        Title.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            Title.topAnchor.constraint(equalTo: view.topAnchor, constant: 72),
-            Title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            Title.heightAnchor.constraint(equalToConstant: 22)
-        ])
         
         subTitle1.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -353,3 +380,5 @@ class PaymentCompletedViewController: UIViewController {
         ])
     }
 }
+
+

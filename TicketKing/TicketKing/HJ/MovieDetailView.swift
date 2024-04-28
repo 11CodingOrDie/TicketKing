@@ -220,8 +220,8 @@ class MovieDetailView: UIViewController, UICollectionViewDataSource, UICollectio
     }
 
     private func configureNavigationBarItems() {
-        let backItem = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
-        backItem.tintColor = .black
+
+        let backItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = backItem
         let heartItem = UIBarButtonItem(image: UIImage(systemName: "heart"), style: .plain, target: self, action: #selector(toggleHeart))
         heartItem.tintColor = .red
