@@ -47,7 +47,7 @@ class BuyTicketPageViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 15
         layout.minimumInteritemSpacing = 50
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
@@ -247,6 +247,31 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
         
         let imageName = images[indexPath.item]
         cell.cardButton.setImage(UIImage(named: imageName), for: .normal)
+        
+        // 버튼에 액션 추가
+        cell.buttonAction = {
+            print("Button tapped at indexPath: \(indexPath)")
+            // 선택된 셀의 인덱스 패스를 저장
+                let selectedIndexPath = indexPath
+                
+                // 모든 셀에 대해 루프를 돌면서 테두리를 설정 혹은 초기화
+            for index in 0..<collectionView.numberOfItems(inSection: indexPath.section) {
+                let indexPath = IndexPath(item: index, section: indexPath.section)
+                if let cell = collectionView.cellForItem(at: indexPath) {
+                    if indexPath == selectedIndexPath {
+                        // 선택된 셀의 경우 테두리 설정
+                        cell.layer.borderWidth = 2.0
+                        cell.layer.borderColor = UIColor.darkGray.cgColor // 테두리 색상 설정
+                        cell.layer.cornerRadius = 5.0 // 테두리의 모서리를 둥글게 만듭니다. 선택사항입니다.
+                    } else {
+                        // 선택되지 않은 셀의 경우 테두리 초기화
+                        cell.layer.borderWidth = 0.0
+                        cell.layer.borderColor = nil
+                        cell.layer.cornerRadius = 0.0
+                    }
+                }
+            }
+        }
         
         return cell
     }
