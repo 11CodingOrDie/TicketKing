@@ -60,7 +60,7 @@ class BuyTicketPageViewController: UIViewController {
         configureUI()
         displayBookingDetails()
         setupNavigation()
-        
+        setupMoveToPaymentCompletedPageButton()
         paymentMethodCollectionView.delegate = self
         paymentMethodCollectionView.dataSource = self
         
@@ -87,7 +87,7 @@ class BuyTicketPageViewController: UIViewController {
         }
     }
     
-    // 네비게이션 backbutton 과 네비게이션 타이틀
+    // 네비게이션 backbutton과 네비게이션 타이틀
     private func setupNavigation() {
         self.title = "결제 확인"
         let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
@@ -164,13 +164,28 @@ class BuyTicketPageViewController: UIViewController {
             make.width.equalTo(346)
             make.centerX.equalToSuperview()
         }
-        
+    }
+    
+    private func setupMoveToPaymentCompletedPageButton() {
         payButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-65)
             make.height.equalTo(60)
             make.width.equalTo(344)
         }
+        payButton.addTarget(self, action: #selector(MoveToPaymentCompletedTapped), for: .touchUpInside)
+    }
+    
+    // 예매된 영화 티켓 화면으로 이동하는 navi
+    @objc func MoveToPaymentCompletedTapped() {
+        let paymentCompltedVC = PaymentCompletedViewController()
+        paymentCompltedVC.movie = movie
+        paymentCompltedVC.selectedDate = selectedDate
+        paymentCompltedVC.selectedTime = selectedTime
+        paymentCompltedVC.selectedSeats = selectedSeats
+        let navController = UINavigationController(rootViewController: paymentCompltedVC)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true, completion: nil)
     }
     
     func configureUI() {
