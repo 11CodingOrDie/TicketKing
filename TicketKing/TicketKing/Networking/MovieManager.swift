@@ -231,4 +231,70 @@ extension MovieManager {
         }
         return decodedResponse
     }
+    
+    // 영화의 비디오 정보 가져오기
+    func fetchVideos(for movieId: Int, language: String = "ko-KR") async throws -> [Video] {
+        let endpoint = "movie/\(movieId)/videos"
+        guard var components = URLComponents(string: "\(baseURL)\(endpoint)") else {
+            throw APIError.badURL
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: language)
+        ]
+        
+        guard let url = components.url else {
+            throw APIError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.requestError
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(VideosResponse.self, from: data)
+            return decodedResponse.results
+        } catch {
+            throw APIError.decodingError
+        }
+    }
+    
+    // 영화 제공업체 정보를 가져오는 메서드
+    func fetchProviders(for movieId: Int, language: String = "ko-KR") async throws -> [Provider] {
+        let endpoint = "movie/\(movieId)/watch/providers"
+        guard var components = URLComponents(string: "\(baseURL)\(endpoint)") else {
+            throw APIError.badURL
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: language)
+        ]
+        
+        guard let url = components.url else {
+            throw APIError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.requestError
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(ProviderResponse.self, from: data)
+            return decodedResponse.results
+        } catch {
+            throw APIError.decodingError
+        }
+    }
 }

@@ -211,30 +211,38 @@ struct Dates: Codable {
 }
 
 
-struct Video: Codable {
+struct VideosResponse: Codable {
     let id: Int
-    let results: [VideoModel]
+    let results: [Video]
 }
 
-// MARK: - Result
-struct VideoModel: Codable {
-    let iso639_1: National
-    let iso3166_1: Language
-    let name, key: String
-    let site: Site
+// 비디오 모델
+struct Video: Codable {
+    let id: String
+    let key: String
+    let name: String
+    let site: String
+    let type: String
     let size: Int
-    let type: TypeEnum
+    let iso6391: String
+    let iso3166_1: String
     let official: Bool
-    let publishedAt, id: String
+    let publishedAt: String
 
     enum CodingKeys: String, CodingKey {
-        case iso639_1 = "iso_639_1"
-        case iso3166_1 = "iso_3166_1"
-        case name, key, site, size, type, official
-        case publishedAt = "published_at"
         case id
+        case key
+        case name
+        case site
+        case type
+        case size
+        case iso6391 = "iso_639_1"
+        case iso3166_1 = "iso_3166_1"
+        case official
+        case publishedAt = "published_at"
     }
 }
+
 
 enum Language: String, Codable {
     case kr = "KR"
@@ -252,4 +260,23 @@ enum TypeEnum: String, Codable {
     case featurette = "Featurette"
     case teaser = "Teaser"
     case trailer = "Trailer"
+}
+
+// 비디오 응답 모델
+struct VideoResponse: Codable {
+    var id: Int
+    var results: [Video]
+}
+
+// 제공사 정보
+struct ProviderResponse: Codable {
+    let results: [Provider]
+}
+
+struct Provider: Codable {
+    let display_priorities: [String: Int]
+    let display_priority: Int
+    let logo_path: String
+    let provider_name: String
+    let provider_id: Int
 }
