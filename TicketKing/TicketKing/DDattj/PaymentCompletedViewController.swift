@@ -38,9 +38,10 @@ class PaymentCompletedViewController: UIViewController {
         thumbnailView.layer.cornerRadius = 10
         thumbnailView.clipsToBounds = true
         thumbnailView.backgroundColor = .gray
+        thumbnailView.contentMode = .scaleAspectFill
         // UIImageView를 생성하여 UIView에 추가합니다.
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleToFill
         imageView.clipsToBounds = true
         imageView.frame = thumbnailView.bounds
         thumbnailView.addSubview(imageView)
@@ -66,7 +67,7 @@ class PaymentCompletedViewController: UIViewController {
     
     let movieTheaterName: UILabel = {
         let label = UILabel()
-        label.text = "1" //\(<#any Any.Type#>)
+        label.text = "티켓킹 장윤서점" //\(<#any Any.Type#>)
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .kBlack
         return label
@@ -90,7 +91,7 @@ class PaymentCompletedViewController: UIViewController {
     
     let movieTheaterN: UILabel = {
         let label = UILabel()
-        label.text = "1" //\(<#any Any.Type#>)
+        label.text = "원성준 특별관" //\(<#any Any.Type#>)
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .kBlack
         return label
