@@ -35,7 +35,7 @@ class BookingMovieViewController: UIViewController {
     
     var selectDateCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 23, bottom: 0, right: 20)
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
@@ -64,7 +64,7 @@ class BookingMovieViewController: UIViewController {
     
     var selectedSeats: [String] = [] {
         didSet {
-            totalPriceWonLabel.text = "\(selectedSeats.count * 10000) 원"
+            totalPriceWonLabel.text = String((selectedSeats.count * 10000).formatted(.currency(code: "KRW")))
             updateMoveToPaymentButtonState()
         }
     }
@@ -217,15 +217,15 @@ class BookingMovieViewController: UIViewController {
         
         selectDateCollectionView.snp.makeConstraints { make in
             make.top.equalTo(bookingLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(27)
-            make.trailing.equalToSuperview().offset(-27)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.height.equalTo(80)
         }
         
         selectTimeCollectionView.snp.makeConstraints { make in
             make.top.equalTo(selectDateCollectionView.snp.bottom).offset(25)
-            make.leading.equalToSuperview().offset(25)
-            make.trailing.equalToSuperview().offset(-25)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.height.equalTo(42)
         }
         
@@ -341,6 +341,7 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
         else if collectionView == selectDateCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectDateCollectionViewCell.identifier, for: indexPath) as? SelectDateCollectionViewCell else { return UICollectionViewCell() }
             cell.dateLabel.text = availableDates[indexPath.item]
+            cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
             return cell
         }
         else if collectionView == selectTimeCollectionView {

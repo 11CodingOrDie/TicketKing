@@ -10,7 +10,6 @@ import SnapKit
 import SDWebImage
 
 class BuyTicketPageViewController: UIViewController {
-    
     var movie: MovieModel?
     var selectedDate: String?
     var selectedTime: String?
@@ -30,14 +29,14 @@ class BuyTicketPageViewController: UIViewController {
     
     let selectedSeatLabel = UILabel()
     let selectedSeatNumLabel = UILabel()
-    lazy var seletedStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
+    lazy var seletedSeatStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
     let separateLineView = UIView()
 
     let separateLineView2 = UIView()
     let totalPriceLabel = UILabel()
     let totalPriceWonLabel = UILabel()
     lazy var totalPriceStackView = UIStackView(arrangedSubviews: [totalPriceLabel, totalPriceWonLabel])
-    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, totalPriceStackView, separateLineView2])
+    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedSeatStackView, separateLineView, totalPriceStackView, separateLineView2])
     
     let payByLabel = UILabel()
     let payButton = UIButton()
@@ -46,12 +45,11 @@ class BuyTicketPageViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 15
         layout.minimumInteritemSpacing = 50
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        layout.sectionInset = UIEdgeInsets(top: 5, left: 20, bottom: 5, right: 20)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
     let images = ["bc", "citi", "hyundai", "kb", "lotte", "nh", "samsung", "sc", "uri"]
-//    let images: [UIImage] = [UIImage(resource: .bc), UIImage(resource: .citi), UIImage(resource: .hyundai), UIImage(resource: .kb), UIImage(resource: .kb), UIImage(resource: .lotte), UIImage(resource: .nh), UIImage(resource: .samsung), UIImage(resource: .sc), UIImage(resource: .uri)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +57,8 @@ class BuyTicketPageViewController: UIViewController {
         setupConstraints()
         configureUI()
         displayBookingDetails()
-        
+        setupNavigation()
+        setupMoveToPaymentCompletedPageButton()
         paymentMethodCollectionView.delegate = self
         paymentMethodCollectionView.dataSource = self
         
@@ -82,8 +81,21 @@ class BuyTicketPageViewController: UIViewController {
             timeLabel.text = selectedTime
             selectedSeatNumLabel.text = selectedSeats.joined(separator: ", ")
             let totalCost = selectedSeats.count * 10000  // 가정: 각 좌석 10,000원
-            totalPriceWonLabel.text = "\(totalCost) 원"
+            totalPriceWonLabel.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
+    }
+    
+    // 네비게이션 backbutton과 네비게이션 타이틀
+    private func setupNavigation() {
+        self.title = "결제 확인"
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .black
+        self.navigationItem.leftBarButtonItem = backButton
+        
+    }
+    
+    @objc func backButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
     }
 
     
@@ -107,6 +119,7 @@ class BuyTicketPageViewController: UIViewController {
         movieInfoStackView.snp.makeConstraints { make in
             make.centerY.equalTo(posterImageView)
             make.leading.equalTo(posterImageView.snp.trailing).offset(20)
+            make.trailing.equalToSuperview().offset(20)
         }
         
         payingView.snp.makeConstraints { make in
@@ -120,7 +133,7 @@ class BuyTicketPageViewController: UIViewController {
         }
         
     
-        [seletedStackView, totalPriceLabel].forEach { view in
+        [seletedSeatStackView, totalPriceLabel].forEach { view in
             view.snp.makeConstraints { make in
                 make.height.equalTo(60)
             }
@@ -149,13 +162,28 @@ class BuyTicketPageViewController: UIViewController {
             make.width.equalTo(346)
             make.centerX.equalToSuperview()
         }
-        
+    }
+    
+    private func setupMoveToPaymentCompletedPageButton() {
         payButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-65)
             make.height.equalTo(60)
             make.width.equalTo(344)
         }
+        payButton.addTarget(self, action: #selector(MoveToPaymentCompletedTapped), for: .touchUpInside)
+    }
+    
+    // 예매된 영화 티켓 화면으로 이동하는 navi
+    @objc func MoveToPaymentCompletedTapped() {
+        let paymentCompltedVC = PaymentCompletedViewController()
+        paymentCompltedVC.movie = movie
+        paymentCompltedVC.selectedDate = selectedDate
+        paymentCompltedVC.selectedTime = selectedTime
+        paymentCompltedVC.selectedSeats = selectedSeats
+        let navController = UINavigationController(rootViewController: paymentCompltedVC)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true, completion: nil)
     }
     
     func configureUI() {
@@ -202,7 +230,9 @@ class BuyTicketPageViewController: UIViewController {
         selectedSeatNumLabel.text = "0000, 0000"
         selectedSeatNumLabel.textColor = .black
         selectedSeatNumLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        seletedStackView.axis = .horizontal
+        selectedSeatNumLabel.numberOfLines = 2
+        seletedSeatStackView.axis = .horizontal
+        seletedSeatStackView.distribution = .equalSpacing
         
         separateLineView.backgroundColor = .white
         
@@ -237,6 +267,8 @@ class BuyTicketPageViewController: UIViewController {
     }
 }
 
+
+
 extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         images.count
@@ -247,6 +279,32 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
         
         let imageName = images[indexPath.item]
         cell.cardButton.setImage(UIImage(named: imageName), for: .normal)
+        
+        // 버튼에 액션 추가
+        cell.buttonAction = {
+            print("Button tapped at indexPath: \(indexPath)")
+            // 선택된 셀의 인덱스 패스를 저장
+                let selectedIndexPath = indexPath
+                
+                // 모든 셀에 대해 루프를 돌면서 테두리를 설정 혹은 초기화
+            for index in 0..<collectionView.numberOfItems(inSection: indexPath.section) {
+                let indexPath = IndexPath(item: index, section: indexPath.section)
+                if let cell = collectionView.cellForItem(at: indexPath) {
+                    if indexPath == selectedIndexPath {
+                        // 선택된 셀의 경우 테두리 설정
+                        cell.layer.borderWidth = 2.0
+                        cell.layer.borderColor = UIColor.darkGray.cgColor // 테두리 색상 설정
+                        cell.layer.cornerRadius = 5.0 // 테두리의 모서리를 둥글게 만듭니다. 선택사항입니다.
+                    } else {
+                        // 선택되지 않은 셀의 경우 테두리 초기화
+                        cell.layer.borderWidth = 0.0
+                        cell.layer.borderColor = nil
+                        cell.layer.cornerRadius = 0.0
+                    }
+                }
+            }
+           
+        }
         
         return cell
     }
