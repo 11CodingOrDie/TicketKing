@@ -39,38 +39,81 @@ class SelectSeatCollectionViewCell: UICollectionViewCell {
 //    }
 }
 
+//class SelectDateCollectionViewCell: UICollectionViewCell {
+//    static let identifier = "SelectDateCollectionViewCell"
+//    
+//    let dateLabel = UILabel()
+//    
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        configureUI()
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//  
+//    override var isSelected: Bool {
+//      didSet {
+//        if isSelected {
+//            backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.6039215686, blue: 0.5450980392, alpha: 1) //rgba(26, 154, 139, 1)
+//        } else {
+//            backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1) //rgba(220, 240, 238, 1)
+//        }
+//      }
+//    }
+//    
+//    func configureUI() {
+//        addSubview(dateLabel)
+//        dateLabel.snp.makeConstraints { make in
+//            make.center.equalToSuperview()
+//        }
+//        dateLabel.textColor = .black
+//        dateLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+//        dateLabel.numberOfLines = 2  // 두 줄로 설정
+//        dateLabel.textAlignment = .center
+//    }
+//    
+//}
+
 class SelectDateCollectionViewCell: UICollectionViewCell {
     static let identifier = "SelectDateCollectionViewCell"
     
-//    let dateButton = UIButton()
+    let dateLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        return label
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        configureUI()
+        contentView.addSubview(dateLabel)
+        dateLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-  
-    override var isSelected: Bool {
-      didSet {
-        if isSelected {
-            backgroundColor = #colorLiteral(red: 0.1019607843, green: 0.6039215686, blue: 0.5450980392, alpha: 1) //rgba(26, 154, 139, 1)
-        } else {
-            backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1) //rgba(220, 240, 238, 1)
-        }
-      }
+    func configureUI() {
+        layer.cornerRadius = 25
+        layer.masksToBounds = true
     }
     
-//    func configureUI() {
-//        contentView.addSubview(dateButton)
-//        dateButton.backgroundColor = .red
-//        
-//    }
-    
+    override var isSelected: Bool {
+        didSet {
+            backgroundColor = isSelected ? #colorLiteral(red: 0.1019607843, green: 0.6039215686, blue: 0.5450980392, alpha: 1) : #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
+        }
+    }
 }
+
 
 class SelectTimeCollectionViewCell: UICollectionViewCell {
     static let identifier = "SelectTimeCollectionViewCell"

@@ -161,11 +161,46 @@ extension MovieManager {
         return movie.results
     }
     
+    // 현재 상영작 날짜 가져오기
+    func fetchNowPlayingMovies2(page: Int = 1, language: String = "ko-KR") async throws -> Movie {
+        let endpoint = "movie/now_playing"
+        return try await fetchMovies(endpoint: endpoint, page: page, language: language)
+    }
+    
     // 영화 검색
     func searchMovies(query: String, page: Int = 1, language: String = "ko-KR") async throws -> [MovieModel] {
         let endpoint = "search/movie"
-        let movie = try await fetchMovies(endpoint: endpoint, page: page, language: language)
-        return movie.results
+        guard var components = URLComponents(string: "\(baseURL)\(endpoint)") else {
+            throw APIError.badURL
+        }
+        
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: apiKey),
+            URLQueryItem(name: "language", value: language),
+            URLQueryItem(name: "query", value: query),  // 검색어 추가
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "include_adult", value: "false")
+        ]
+        
+        guard let url = components.url else {
+            throw APIError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw APIError.requestError
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(Movie.self, from: data)
+            return decodedResponse.results
+        } catch {
+            throw APIError.decodingError
+        }
     }
     
     // 영화 장르

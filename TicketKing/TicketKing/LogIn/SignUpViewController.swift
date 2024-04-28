@@ -61,7 +61,6 @@ class SignUpViewController: UIViewController, UIPickerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        print("Is inside a navigation controller: \(navigationController != nil)")
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         view.addSubview(signUpButton)

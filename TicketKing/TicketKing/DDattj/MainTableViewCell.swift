@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class MainTableViewCell: UITableViewCell {
-    
+    static let identifier = "MainTableViewCell"
     private let container = UIView()
     private var movieInfoCell: MovieInfoCell?
 

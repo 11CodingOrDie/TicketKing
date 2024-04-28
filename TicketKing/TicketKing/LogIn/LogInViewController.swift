@@ -79,7 +79,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         button.setTitle("로그인", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5.5
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         
         return button
