@@ -261,7 +261,6 @@ class BookingMovieViewController: UIViewController {
         bookingLabel.text = "예약하기"
         bookingLabel.font = .systemFont(ofSize: 17, weight: .bold)
         
-        //////////////////////////////////ㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗㅗ///////////////////////////////////////
         bookingInfoImageView.isUserInteractionEnabled = true
         
         selectDateCollectionView.backgroundColor = .clear

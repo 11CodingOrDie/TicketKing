@@ -281,7 +281,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     func configurereleasedMovieViewConstaint() {
         releasedMovieView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 120), // 원하는 Y 좌표로 설정
+            releasedMovieView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130), // 원하는 Y 좌표로 설정
             releasedMovieView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             releasedMovieView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             releasedMovieView.heightAnchor.constraint(equalToConstant: 350) // 원하는 높이로 설정

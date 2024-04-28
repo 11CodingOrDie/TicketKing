@@ -88,7 +88,7 @@ class BuyTicketPageViewController: UIViewController {
     // 네비게이션 backbutton과 네비게이션 타이틀
     private func setupNavigation() {
         self.title = "결제 확인"
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.left.circle"), style: .plain, target: self, action: #selector(backButtonTapped))
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
         backButton.tintColor = .black
         self.navigationItem.leftBarButtonItem = backButton
         

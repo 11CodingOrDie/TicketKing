@@ -114,13 +114,13 @@ class PaymentCompletedViewController: UIViewController {
         return label
     }()
     
-//    let movieNo: UILabel = {
-//        let label = UILabel()
-//        label.text = "1" //\(<#any Any.Type#>)
-//        label.font = UIFont.systemFont(ofSize: 15)
-//        label.textColor = .kBlack
-//        return label
-//    }()
+    //    let movieNo: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "1" //\(<#any Any.Type#>)
+    //        label.font = UIFont.systemFont(ofSize: 15)
+    //        label.textColor = .kBlack
+    //        return label
+    //    }()
     
     //MARK: - 고정 설정
     
@@ -187,34 +187,31 @@ class PaymentCompletedViewController: UIViewController {
         return label
     }()
     
-//    let subTitle7: UILabel = {
-//        let label = UILabel()
-//        label.text = "예매번호"
-//        label.font = UIFont.systemFont(ofSize: 13)
-//        label.textColor = .kGray
-//        return label
-//    }()
+    //    let subTitle7: UILabel = {
+    //        let label = UILabel()
+    //        label.text = "예매번호"
+    //        label.font = UIFont.systemFont(ofSize: 13)
+    //        label.textColor = .kGray
+    //        return label
+    //    }()
     
     let barCode: UIImageView = {
         let image = UIImageView(image: UIImage(named: "barcode"))
         return image
     }()
     
-//    let totalPriceWonLabel: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 15)
-//        label.textColor = .kBlack
-//        return label
-//    }()
+    //    let totalPriceWonLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.font = UIFont.systemFont(ofSize: 15)
+    //        label.textColor = .kBlack
+    //        return label
+    //    }()
     
     var bookingData: SavedBookingData?
-    var movie: MovieModel?
-    var selectedDate: String?
-    var selectedTime: String?
-    var selectedSeats: [String] = [] {
+    {
         didSet {
-            subTitle6.text = "\(selectedSeats.count * 10000) 원"
-
+            moviePrice.text = "\(selectedSeats.count * 10000) 원"
+            
         }
     }
     
@@ -225,7 +222,7 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(movieBackground)
         view.addSubview(ticket)
         view.addSubview(movieThumbnail)
-    
+        
         view.addSubview(movieTitle)
         view.addSubview(movieTheaterName)
         view.addSubview(movieDate)
@@ -233,7 +230,7 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(movieTheaterN)
         view.addSubview(movieSeat)
         view.addSubview(moviePrice)
-//        view.addSubview(movieNo)
+        //        view.addSubview(movieNo)
         
         view.addSubview(barCode)
         view.addSubview(logoS)
@@ -244,18 +241,19 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(playingRoom)
         view.addSubview(bookingSeat)
         view.addSubview(price)
-//        view.addSubview(subTitle7)
+        //        view.addSubview(subTitle7)
         setupNavigation()
         displayBookingDetails()
         AutoLayoutD()
         AutoLayout()
         displayBookingDetails()
+        
     }
     
     private func displayBookingDetails() {
         if let movie = movie {
             movieTitle.text = movie.title
-//            genreLabel.text = GenreManager.shared.genreNames(from: movie.genreIDS)
+            //            genreLabel.text = GenreManager.shared.genreNames(from: movie.genreIDS)
             if let posterURL = URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)") {
                 movieBackground.sd_setImage(with: posterURL, placeholderImage: UIImage(named: "placeholder"))
             } else {
@@ -275,19 +273,23 @@ class PaymentCompletedViewController: UIViewController {
             moviePrice.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
     }
-
+    
     
     
     private func setupNavigation() {
         self.title = "예매내역"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white] // 타이틀 색상 변경
         let homeButton = UIBarButtonItem(image: UIImage(systemName: "house.fill"), style: .plain, target: self, action: #selector(goMainTapped))
         homeButton.tintColor = .white
         self.navigationItem.rightBarButtonItem = homeButton
     }
     
     @objc func goMainTapped() {
-//        dismiss(animated: true, completion: nil)
+        //        dismiss(animated: true, completion: nil)
+        
     }
+    
+    
     
     
     
@@ -302,7 +304,7 @@ class PaymentCompletedViewController: UIViewController {
             movieBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             
         ])
-
+        
         movieThumbnail.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieThumbnail.topAnchor.constraint(equalTo: view.topAnchor, constant: 154),
@@ -346,7 +348,7 @@ class PaymentCompletedViewController: UIViewController {
         movieSeat.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieSeat.topAnchor.constraint(equalTo: movieTheaterN.topAnchor),
-//            movieSeat.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233),
+            //            movieSeat.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233),
             movieSeat.leadingAnchor.constraint(equalTo: bookingSeat.leadingAnchor),
             movieSeat.trailingAnchor.constraint(equalTo: ticket.trailingAnchor, constant: -20),
             movieSeat.bottomAnchor.constraint(equalTo: moviePrice.bottomAnchor)
@@ -358,11 +360,11 @@ class PaymentCompletedViewController: UIViewController {
             moviePrice.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 74)
         ])
         
-//        movieNo.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            movieNo.topAnchor.constraint(equalTo: view.topAnchor, constant: 579),
-//            movieNo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233)
-//        ])
+        //        movieNo.translatesAutoresizingMaskIntoConstraints = false
+        //        NSLayoutConstraint.activate([
+        //            movieNo.topAnchor.constraint(equalTo: view.topAnchor, constant: 579),
+        //            movieNo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233)
+        //        ])
     }
     
     func AutoLayoutD() {
@@ -418,7 +420,7 @@ class PaymentCompletedViewController: UIViewController {
         bookingSeat.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             bookingSeat.centerYAnchor.constraint(equalTo: playingRoom.centerYAnchor),
-//            bookingSeat.topAnchor.constraint(equalTo: view.topAnchor, constant: 490),
+            //            bookingSeat.topAnchor.constraint(equalTo: view.topAnchor, constant: 490),
             bookingSeat.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233)
         ])
         
@@ -428,11 +430,11 @@ class PaymentCompletedViewController: UIViewController {
             price.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 74)
         ])
         
-//        subTitle7.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            subTitle7.topAnchor.constraint(equalTo: view.topAnchor, constant: 554),
-//            subTitle7.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233)
-//        ])
+        //        subTitle7.translatesAutoresizingMaskIntoConstraints = false
+        //        NSLayoutConstraint.activate([
+        //            subTitle7.topAnchor.constraint(equalTo: view.topAnchor, constant: 554),
+        //            subTitle7.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 233)
+        //        ])
     }
 }
 
