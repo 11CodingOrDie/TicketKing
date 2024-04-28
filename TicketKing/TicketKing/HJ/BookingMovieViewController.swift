@@ -35,7 +35,7 @@ class BookingMovieViewController: UIViewController {
     
     var selectDateCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 6)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 23, bottom: 0, right: 20)
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
@@ -217,15 +217,15 @@ class BookingMovieViewController: UIViewController {
         
         selectDateCollectionView.snp.makeConstraints { make in
             make.top.equalTo(bookingLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(27)
-            make.trailing.equalToSuperview().offset(-27)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.height.equalTo(80)
         }
         
         selectTimeCollectionView.snp.makeConstraints { make in
             make.top.equalTo(selectDateCollectionView.snp.bottom).offset(25)
-            make.leading.equalToSuperview().offset(25)
-            make.trailing.equalToSuperview().offset(-25)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.height.equalTo(42)
         }
         
