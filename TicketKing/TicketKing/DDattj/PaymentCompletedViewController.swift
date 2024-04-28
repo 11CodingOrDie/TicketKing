@@ -261,13 +261,13 @@ class PaymentCompletedViewController: UIViewController {
     
     private func setupNavigation() {
         self.title = "예매내역"
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(backButtonTapped))
-        backButton.tintColor = .white
-        self.navigationItem.leftBarButtonItem = backButton
+        let homeButton = UIBarButtonItem(image: UIImage(systemName: "house.fill"), style: .plain, target: self, action: #selector(goMainTapped))
+        homeButton.tintColor = .white
+        self.navigationItem.rightBarButtonItem = homeButton
     }
     
-    @objc func backButtonTapped() {
-        dismiss(animated: true, completion: nil)
+    @objc func goMainTapped() {
+//        dismiss(animated: true, completion: nil)
     }
     
     

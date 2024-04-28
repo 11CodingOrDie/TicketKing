@@ -366,7 +366,7 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
             return CGSize(width: 38, height: 30)
         } 
         else if collectionView == selectDateCollectionView {
-            return CGSize(width: 80, height: 80)
+            return CGSize(width: 54, height: 80)
         }
         else if collectionView == selectTimeCollectionView {
             return CGSize(width: 76, height: 42)

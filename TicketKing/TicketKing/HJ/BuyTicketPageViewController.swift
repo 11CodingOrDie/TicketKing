@@ -10,7 +10,6 @@ import SnapKit
 import SDWebImage
 
 class BuyTicketPageViewController: UIViewController {
-    
     var movie: MovieModel?
     var selectedDate: String?
     var selectedTime: String?
@@ -269,6 +268,8 @@ class BuyTicketPageViewController: UIViewController {
     }
 }
 
+
+
 extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         images.count
@@ -303,6 +304,7 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
                     }
                 }
             }
+           
         }
         
         return cell
