@@ -31,14 +31,14 @@ class BuyTicketPageViewController: UIViewController {
 
     let selectedSeatLabel = UILabel()
     let selectedSeatNumLabel = UILabel()
-    lazy var seletedStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
+    lazy var seletedSeatStackView = UIStackView(arrangedSubviews: [selectedSeatLabel, selectedSeatNumLabel])
     let separateLineView = UIView()
 
     let separateLineView2 = UIView()
     let totalPriceLabel = UILabel()
     let totalPriceWonLabel = UILabel()
     lazy var totalPriceStackView = UIStackView(arrangedSubviews: [totalPriceLabel, totalPriceWonLabel])
-    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedStackView, separateLineView, totalPriceStackView, separateLineView2])
+    lazy var bookingInfoStackView = UIStackView(arrangedSubviews: [seletedSeatStackView, separateLineView, totalPriceStackView, separateLineView2])
     
     let payByLabel = UILabel()
     let payButton = UIButton()
@@ -135,7 +135,7 @@ class BuyTicketPageViewController: UIViewController {
         }
         
     
-        [seletedStackView, totalPriceLabel].forEach { view in
+        [seletedSeatStackView, totalPriceLabel].forEach { view in
             view.snp.makeConstraints { make in
                 make.height.equalTo(60)
             }
@@ -232,7 +232,9 @@ class BuyTicketPageViewController: UIViewController {
         selectedSeatNumLabel.text = "0000, 0000"
         selectedSeatNumLabel.textColor = .black
         selectedSeatNumLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        seletedStackView.axis = .horizontal
+        selectedSeatNumLabel.numberOfLines = 2
+        seletedSeatStackView.axis = .horizontal
+        seletedSeatStackView.distribution = .equalSpacing
         
         separateLineView.backgroundColor = .white
         
