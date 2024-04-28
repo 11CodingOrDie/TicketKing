@@ -91,6 +91,7 @@ extension MovieManager {
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
         let (data, response) = try await URLSession.shared.data(for: request)
+        print(String(data: data, encoding: .utf8) ?? "Invalid JSON")
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw APIError.requestError
         }

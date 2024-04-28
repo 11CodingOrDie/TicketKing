@@ -84,7 +84,7 @@ class PaymentCompletedViewController: UIViewController {
     
     let movieTheaterN: UILabel = {
         let label = UILabel()
-        label.text = "1" //\(<#any Any.Type#>)
+        label.text = "1" //\(any Any.Type)
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = .kBlack
         return label
@@ -192,6 +192,24 @@ class PaymentCompletedViewController: UIViewController {
         return image
     }()
     
+//    let totalPriceWonLabel: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 15)
+//        label.textColor = .kBlack
+//        return label
+//    }()
+    
+    var bookingData: SavedBookingData?
+    var movie: MovieModel?
+    var selectedDate: String?
+    var selectedTime: String?
+    var selectedSeats: [String] = [] {
+        didSet {
+            subTitle6.text = "\(selectedSeats.count * 10000) 원"
+
+        }
+    }
+    
     //MARK: - 기능 구현
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -220,12 +238,24 @@ class PaymentCompletedViewController: UIViewController {
         view.addSubview(subTitle6)
         view.addSubview(subTitle7)
         setupNavigation()
-        
+        displayBookingDetails()
         AutoLayoutD()
         AutoLayout()
     }
     
-    
+    private func displayBookingDetails() {
+        if let movie = movie {
+            movieTitle.text = "영화 제목: \(movie.title)" // 영화 제목
+            movieDate.text = "날짜: \(selectedDate ?? "N/A")" // 선택된 날짜
+            movieTime.text = "시간: \(selectedTime ?? "N/A")" // 선택된 시간
+            movieSeat.text = "좌석: \(selectedSeats.joined(separator: ", "))" // 선택된 좌석
+            let totalCost = selectedSeats.count * 10000 // 예를 들어 각 좌석이 10,000원이라고 가정
+            moviePrice.text = "가격: \(totalCost) 원"
+        } else {
+            movieTitle.text = "영화 정보가 없습니다."
+        }
+    }
+
     
     
     private func setupNavigation() {

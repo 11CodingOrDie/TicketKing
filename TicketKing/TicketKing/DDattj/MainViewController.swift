@@ -67,12 +67,23 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProfileImage), name: .profileImageUpdated, object: nil)
         
         view.addSubview(brandLogo)
         view.addSubview(profileImageView)
         autoLayout()
         
         view.addSubview(profileImageView)
+    }
+    
+    @objc func updateProfileImage() {
+        if let userID = UserDefaults.standard.string(forKey: "currentUserID") {
+            loadImage(userID: userID)
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func loadImage(userID: String) {
@@ -171,6 +182,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.identifier, for: indexPath) as? MainCollectionViewCell else {
             fatalError("Unable to dequeue MovieCardCollectionViewCell")
         }
@@ -307,4 +319,8 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         ])
     }
 
+}
+
+extension Notification.Name {
+    static let profileImageUpdated = Notification.Name("profileImageUpdated")
 }

@@ -26,7 +26,9 @@ class MovieInfoCell: UIView {
         self.viewMode = mode
         setupViews()
         setupConstraints()
-        configure(with: movie)
+        if let movie = movie {
+            configure(with: movie) // MovieModel 타입의 데이터가 있을 때 호출
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -82,18 +84,34 @@ class MovieInfoCell: UIView {
         }
     }
     
+    func configure(with movie: MovieDetails) {
+        imageView.isHidden = false
+        titleLabel.isHidden = viewMode == .compact
+        genreLabel.isHidden = viewMode == .compact
+        
+        imageView.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath ?? "")"), placeholderImage: UIImage(named: "placeholder"))
+        
+        if viewMode == .full {
+            titleLabel.text = movie.title
+            // 장르 표시 방식에 따라 수정 필요
+            genreLabel.text = "장르: \(movie.genres.flatMap { $0.genres }.map { $0.name }.joined(separator: ", "))"
+            
+        }
+    }
+    
     func configure(with movie: MovieModel?) {
         imageView.isHidden = movie == nil
         titleLabel.isHidden = movie == nil || viewMode == .compact
         genreLabel.isHidden = movie == nil || viewMode == .compact
-        
+
         if let movie = movie {
             imageView.sd_setImage(with: URL(string: "https://image.tmdb.org/t/p/w500\(movie.posterPath)"), placeholderImage: UIImage(named: "placeholder"))
-            
+
             if viewMode == .full {
                 titleLabel.text = movie.title
                 genreLabel.text = "장르: \(GenreManager.shared.genreNames(from: movie.genreIDS))"
             }
         }
     }
+
 }
