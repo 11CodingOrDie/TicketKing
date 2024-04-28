@@ -47,12 +47,11 @@ class BuyTicketPageViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 15
         layout.minimumInteritemSpacing = 50
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return cv
     }()
     let images = ["bc", "citi", "hyundai", "kb", "lotte", "nh", "samsung", "sc", "uri"]
-//    let images: [UIImage] = [UIImage(resource: .bc), UIImage(resource: .citi), UIImage(resource: .hyundai), UIImage(resource: .kb), UIImage(resource: .kb), UIImage(resource: .lotte), UIImage(resource: .nh), UIImage(resource: .samsung), UIImage(resource: .sc), UIImage(resource: .uri)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +82,7 @@ class BuyTicketPageViewController: UIViewController {
             timeLabel.text = selectedTime
             selectedSeatNumLabel.text = selectedSeats.joined(separator: ", ")
             let totalCost = selectedSeats.count * 10000  // 가정: 각 좌석 10,000원
-            totalPriceWonLabel.text = "\(totalCost) 원"
+            totalPriceWonLabel.text = String((totalCost).formatted(.currency(code: "KRW")))
         }
     }
 

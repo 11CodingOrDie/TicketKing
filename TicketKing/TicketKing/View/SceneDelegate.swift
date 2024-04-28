@@ -63,7 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         }
 
-        window?.rootViewController = PaymentCompletedViewController()
+        window?.rootViewController = tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

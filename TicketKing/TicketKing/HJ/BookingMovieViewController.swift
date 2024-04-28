@@ -64,7 +64,7 @@ class BookingMovieViewController: UIViewController {
     
     var selectedSeats: [String] = [] {
         didSet {
-            totalPriceWonLabel.text = "\(selectedSeats.count * 10000) 원"
+            totalPriceWonLabel.text = String((selectedSeats.count * 10000).formatted(.currency(code: "KRW")))
             updateMoveToPaymentButtonState()
         }
     }
@@ -341,6 +341,7 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
         else if collectionView == selectDateCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SelectDateCollectionViewCell.identifier, for: indexPath) as? SelectDateCollectionViewCell else { return UICollectionViewCell() }
             cell.dateLabel.text = availableDates[indexPath.item]
+            cell.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
             return cell
         }
         else if collectionView == selectTimeCollectionView {
@@ -365,7 +366,7 @@ extension BookingMovieViewController: UICollectionViewDelegate, UICollectionView
             return CGSize(width: 38, height: 30)
         } 
         else if collectionView == selectDateCollectionView {
-            return CGSize(width: 54, height: 80)
+            return CGSize(width: 80, height: 80)
         }
         else if collectionView == selectTimeCollectionView {
             return CGSize(width: 76, height: 42)
