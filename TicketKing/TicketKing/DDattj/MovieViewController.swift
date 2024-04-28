@@ -97,7 +97,7 @@ class MovieViewController: UIViewController {
         //서치창 콜렉션뷰 오토레이아웃
         thirdCollectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            thirdCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200), // 원하는 Y 좌표로 설정
+            thirdCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 180), // 원하는 Y 좌표로 설정
             thirdCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 18),
             thirdCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -18),
             thirdCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 10)
@@ -191,23 +191,8 @@ extension MovieViewController: UICollectionViewDelegate, UICollectionViewDataSou
         return CGSize(width: 111, height: 200)
     }
     
-    
-    
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-           let selectedMovie = searchMovies[indexPath.row]
-           let detailViewController = MovieDetailView()
-           detailViewController.movie = selectedMovie  // 영화 정보 전달
-
-           let navigationController = UINavigationController(rootViewController: detailViewController)
-
-           // 모달 뷰 전체 화면으로 설정
-           navigationController.modalPresentationStyle = .fullScreen
-
-           // 현재 뷰 컨트롤러에서 모달 방식으로 네비게이션 컨트롤러 표시
-           present(navigationController, animated: true)
-       }
 }
+
 
 
 
