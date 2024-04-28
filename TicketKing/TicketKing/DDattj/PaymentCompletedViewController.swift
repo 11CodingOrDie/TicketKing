@@ -59,6 +59,8 @@ class PaymentCompletedViewController: UIViewController {
         label.text = "1" //\(<#any Any.Type#>)
         label.font = UIFont.systemFont(ofSize: 22)
         label.textColor = .kDarkGreen
+        label.minimumScaleFactor = 0.5
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -293,7 +295,8 @@ class PaymentCompletedViewController: UIViewController {
         movieTitle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 312),
-            movieTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 74)
+            movieTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 74),
+            movieTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -74)
         ])
         
         movieTheaterName.translatesAutoresizingMaskIntoConstraints = false
