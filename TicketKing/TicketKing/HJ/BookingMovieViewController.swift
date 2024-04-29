@@ -115,7 +115,7 @@ class BookingMovieViewController: UIViewController {
 
     @objc func dateChanged(_ sender: UIDatePicker) {
         let selectedDate = sender.date
-        dateFormatter.dateFormat = "MM월 dd일"
+//        dateFormatter.dateFormat = "MM월 dd일"
         self.selectedDate = dateFormatter.string(from: selectedDate)
     }
     
@@ -270,6 +270,7 @@ class BookingMovieViewController: UIViewController {
         selectTimeCollectionView.backgroundColor = .clear
         selectTimeCollectionView.register(SelectTimeCollectionViewCell.self, forCellWithReuseIdentifier: SelectTimeCollectionViewCell.identifier)
         selectTimeCollectionView.allowsSelection = true
+        selectTimeCollectionView.showsHorizontalScrollIndicator = false
         
         lineView.backgroundColor = #colorLiteral(red: 0.862745098, green: 0.9411764706, blue: 0.9333333333, alpha: 1)
         totalPriceLabel.text = "총 금액"
@@ -297,7 +298,7 @@ class BookingMovieViewController: UIViewController {
         let paymentVC = BuyTicketPageViewController()
         paymentVC.movie = movie
         paymentVC.selectedDate = selectedDate
-        paymentVC.selectedTime = selectedTime
+        paymentVC.selectedTime = selectedTime?.replacingOccurrences(of: "\n", with: " ")
         paymentVC.selectedSeats = selectedSeats
         let navController = UINavigationController(rootViewController: paymentVC)
         navController.modalPresentationStyle = .fullScreen

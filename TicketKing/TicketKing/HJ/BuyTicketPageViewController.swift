@@ -16,6 +16,12 @@ class BuyTicketPageViewController: UIViewController {
     var selectedSeats: [String] = []
 
     let posterImageView = UIImageView()
+    var cardSelected: String? {
+        didSet {
+          payButton.isEnabled = true
+          payButton.alpha = 1
+        }
+      }
     let movieTitleLabel = UILabel()
     let genreLabel = UILabel()
     var dateLabel = UILabel()
@@ -61,6 +67,9 @@ class BuyTicketPageViewController: UIViewController {
         setupMoveToPaymentCompletedPageButton()
         paymentMethodCollectionView.delegate = self
         paymentMethodCollectionView.dataSource = self
+        
+        payButton.isEnabled = false
+            payButton.alpha = 0.5
         
         Task {
             await GenreManager.shared.loadGenresAsync()
@@ -318,7 +327,8 @@ extension BuyTicketPageViewController: UICollectionViewDelegate, UICollectionVie
         cell.cardButton.setImage(UIImage(named: imageName), for: .normal)
         
         // 버튼에 액션 추가
-        cell.buttonAction = {
+        cell.buttonAction = { [ weak self ] in
+            self?.cardSelected = self?.images[indexPath.item]
             print("Button tapped at indexPath: \(indexPath)")
             // 선택된 셀의 인덱스 패스를 저장
                 let selectedIndexPath = indexPath
